@@ -1,0 +1,35 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.BookFinder" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="checkboxStyle">@style/Widget.App.CheckBox</item>
+    </style>
+
+    <style name="Theme.BookFinder" parent="Base.Theme.BookFinder">
+        <item name="android:statusBarColor">#C5A688</item>
+        <item name="android:navigationBarColor">@color/splash_back</item>
+    </style>
+
+    <style name="splashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_image</item>
+        <item name="android:statusBarColor">@color/splash_back</item>
+        <item name="android:navigationBarColor">@color/splash_back</item>
+    </style>
+
+    <style name="Widget.App.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.CheckBox</item>
+    </style>
+
+    <style name="ThemeOverlay.App.CheckBox" parent="">
+        <!-- Container colors -->
+        <item name="colorOnSurface">#FFB1763E</item>
+        <item name="colorPrimary">#FFB1763E</item>
+        <item name="colorError">#FFB1763E</item>
+        <!-- Icon colors -->
+        <item name="colorSurface">#FFB1763E</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorOnError">#FFB1763E</item>
+    </style>
+</resources>

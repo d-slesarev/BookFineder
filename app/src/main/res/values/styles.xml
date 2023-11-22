@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/apk/res-auto">
+
+    <style name="RoundedTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <!-- Задайте цвет фона (background color) и цвет обводки (stroke color) -->
+        <item name="boxBackgroundColor">@color/splash_back</item>
+        <item name="boxStrokeColor">@color/black</item>
+
+        <!-- Задайте толщину обводки в состояниях фокуса и по умолчанию -->
+        <item name="boxStrokeWidthFocused">0.5dp</item>
+
+        <!-- Задайте угловой радиус (border radius) для боковых контуров -->
+
+        <item name="boxCornerRadiusTopStart">26dp</item>
+        <item name="boxCornerRadiusTopEnd">26dp</item>
+
+        <item name="boxCornerRadiusBottomStart">26dp</item>
+        <item name="boxCornerRadiusBottomEnd">26dp</item>
+
+        <item name="android:textCursorDrawable">@drawable/custom_cursor</item>
+        <item name="cursorColor">@color/cursor_color</item>
+
+    </style>
+
+    <style name="CustomTextInputEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+        <!-- Устанавливаем нижний и верхний внутренний отступ -->
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:textColorHighlight">#E8C29E</item>
+    </style>
+
+    <style name="CustomHintText" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">14sp</item> <!-- Задайте желаемый размер текста hint -->
+        <!-- Другие атрибуты стиля, если необходимо -->
+    </style>
+
+    <style name="SingInBtn">
+        <item name="android:background">@drawable/sing_in_btn_shape</item>
+    </style>
+
+    <style name="OutlinedButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:paddingLeft">@dimen/m3_btn_padding_left</item>
+        <item name="android:paddingRight">@dimen/m3_btn_padding_right</item>
+        <item name="strokeColor">@color/m3_button_outline_color_selector</item>
+        <item name="strokeWidth">2dp</item>
+
+        <item name="android:stateListAnimator" ns1:ignore="NewApi">
+            @animator/m3_btn_elevated_btn_state_list_anim
+        </item>
+        <item name="android:textColor">@color/m3_text_button_foreground_color_selector</item>
+        <item name="elevation">15dp</item>
+        <item name="iconTint">@color/m3_text_button_foreground_color_selector</item>
+        <item name="rippleColor">#B1763E</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Material3.Button.ElevatedButton</item>
+    </style>
+
+    <style name="ElevatedButton">
+        <item name="android:stateListAnimator" ns1:ignore="NewApi">
+            @animator/m3_btn_elevated_btn_state_list_anim
+        </item>
+        <item name="android:textColor">@color/m3_text_button_foreground_color_selector</item>
+        <item name="elevation">20dp</item>
+        <item name="iconTint">@color/m3_text_button_foreground_color_selector</item>
+        <item name="rippleColor">#E3E3E3</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Material3.Button.ElevatedButton</item>
+    </style>
+
+    <style name="TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="enforceTextAppearance">false</item>
+        <item name="android:maxWidth">@dimen/m3_btn_max_width</item>
+        <item name="android:paddingLeft">@dimen/m3_btn_text_btn_padding_left</item>
+        <item name="android:paddingRight">@dimen/m3_btn_text_btn_padding_right</item>
+        <item name="android:paddingTop">@dimen/m3_btn_padding_top</item>
+        <item name="android:paddingBottom">@dimen/m3_btn_padding_bottom</item>
+        <item name="android:insetTop">@dimen/m3_btn_inset</item>
+        <item name="android:insetBottom">@dimen/m3_btn_inset</item>
+        <item name="android:textAppearance">@macro/m3_comp_text_button_label_text_type</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.M3.Comp.TextButton.Container.Shape</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Material3.Button.TextButton</item>
+        <item name="android:textColor">@color/m3_text_button_foreground_color_selector</item>
+        <item name="iconTint">@color/m3_text_button_foreground_color_selector</item>
+        <item name="backgroundTint">@color/m3_text_button_background_color_selector</item>
+        <item name="rippleColor">#B1763E</item>
+    </style>
+
+</resources>
