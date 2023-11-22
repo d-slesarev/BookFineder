@@ -30,7 +30,7 @@ tools:context=".sing_in.fragments.SingIn">
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/forgotPass"
+        app:layout_constraintTop_toBottomOf="@+id/forgotPassLayout"
         app:layout_constraintVertical_bias="0.0" />
 
 <LinearLayout
@@ -98,30 +98,30 @@ tools:context=".sing_in.fragments.SingIn">
     app:layout_constraintVertical_bias="0.0"
     tools:ignore="TouchTargetSizeCheck" />
 
-<Button
-    android:id="@+id/googleSingInBtn"
-    style="@style/OutlinedButton"
-    android:layout_width="0dp"
-    android:layout_height="48dp"
-    android:layout_marginStart="18dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginEnd="18dp"
-    android:backgroundTint="#D6CEC6"
-    android:fontFamily="@font/habibi"
-    android:text="Sing-In with Google"
-    android:textColor="#121212"
-    android:textSize="15sp"
-    android:textAlignment="textStart"
-    android:drawableLeft="@drawable/ic_google_logo"
-    android:drawablePadding="15dp"
-    android:paddingLeft="70dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="1.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/separator_OR"
-    app:layout_constraintVertical_bias="0.0"
-    tools:ignore="TouchTargetSizeCheck" />
+    <Button
+        android:id="@+id/googleSingInBtn"
+        style="@style/OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="18dp"
+        android:backgroundTint="#D6CEC6"
+        android:drawableLeft="@drawable/ic_google_logo"
+        android:drawablePadding="15dp"
+        android:fontFamily="@font/habibi"
+        android:paddingLeft="70dp"
+        android:text="Sign-In with Google"
+        android:textAlignment="textStart"
+        android:textColor="#121212"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separator_OR"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="TouchTargetSizeCheck" />
 
 <LinearLayout
     android:id="@+id/separator_AHA"
@@ -174,7 +174,7 @@ tools:context=".sing_in.fragments.SingIn">
         android:layout_marginTop="10dp"
         android:contentDescription="register_logo"
         android:paddingBottom="-15dp"
-        android:src="@drawable/ic_sing_in"
+        android:src="@drawable/sing_in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -205,7 +205,7 @@ tools:context=".sing_in.fragments.SingIn">
         app:startIconDrawable="@drawable/ic_email">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/emailTextInput"
+            android:id="@+id/emailTexInp"
             style="@style/CustomTextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="42dp"
@@ -242,7 +242,7 @@ tools:context=".sing_in.fragments.SingIn">
     app:startIconDrawable="@drawable/ic_lock">
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/passTextInput"
+        android:id="@+id/passSignTexInp"
         style="@style/CustomTextInputEditText"
         android:layout_width="match_parent"
         android:layout_height="42dp"
@@ -257,7 +257,7 @@ tools:context=".sing_in.fragments.SingIn">
 </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/forgotPass"
+        android:id="@+id/forgotPassLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
@@ -287,7 +287,7 @@ tools:context=".sing_in.fragments.SingIn">
             tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/forgotBtn"
             style="@style/TextButton"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
