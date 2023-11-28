@@ -1,6 +1,7 @@
 package ua.khai.slesarev.bookfinder.sing_in.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -13,6 +14,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import ua.khai.slesarev.bookfinder.HomeActivity
 import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.databinding.FragSingInBinding
 import ua.khai.slesarev.bookfinder.databinding.FragSingUpBinding
@@ -38,6 +40,11 @@ class SingIn : Fragment() {
         binding.SingUpBtn.setOnClickListener {
             findNavController().navigate(R.id.action_singIn_to_singUp)
             Log.i("MyLog", "Pressed Registration!!!")
+        }
+
+        binding.singInBtn.setOnClickListener {
+            val intent = Intent(requireContext(), HomeActivity::class.java)
+            startActivity(intent)
         }
 
         binding.forgotBtn.setOnClickListener {

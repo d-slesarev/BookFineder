@@ -55,5 +55,5 @@
         android:id="@+id/homeActivity"
         android:name="ua.khai.slesarev.bookfinder.HomeActivity"
         android:label="activity_home"
-        tools:layout="@layout/activity_home" />
+        tools:layout="@layout/activity_home"/>
 </navigation>

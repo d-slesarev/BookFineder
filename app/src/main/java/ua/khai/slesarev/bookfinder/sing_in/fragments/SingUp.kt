@@ -38,6 +38,10 @@ class SingUp : Fragment() {
             Log.i("MyLog", "Pressed Registration!!!")
         }
 
+        binding.createAccountBtn.setOnClickListener {
+
+        }
+
         binding.passRegisterTexImp.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE ||
                 (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)

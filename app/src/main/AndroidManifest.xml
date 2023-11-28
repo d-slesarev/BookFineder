@@ -14,7 +14,9 @@
         tools:targetApi="31">
         <activity
             android:name=".HomeActivity"
-            android:exported="false" />
+            android:exported="true" >
+            <nav-graph android:value="@navigation/home_screan_nav"/>
+        </activity>
 
         <activity
             android:name=".sing_in.SingInActivity"

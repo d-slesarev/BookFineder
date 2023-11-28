@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_screen_nav"
+    app:startDestination="@id/homeScreen">
+
+    <fragment
+        android:id="@+id/homeScreen"
+        android:name="ua.khai.slesarev.bookfinder.HomeScreen"
+        android:label="frag_home"
+        tools:layout="@layout/frag_home" />
+    <fragment
+        android:id="@+id/searchScreen"
+        android:name="ua.khai.slesarev.bookfinder.SearchScreen"
+        android:label="frag_search"
+        tools:layout="@layout/frag_search" />
+    <fragment
+        android:id="@+id/myBooksScreen"
+        android:name="ua.khai.slesarev.bookfinder.MyBooksScreen"
+        android:label="frag_my_books"
+        tools:layout="@layout/frag_my_books" />
+    <fragment
+        android:id="@+id/profileScreen"
+        android:name="ua.khai.slesarev.bookfinder.ProfileScreen"
+        android:label="frag_profile"
+        tools:layout="@layout/frag_profile" />
+</navigation>
