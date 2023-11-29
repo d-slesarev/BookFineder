@@ -7,11 +7,10 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import ua.khai.slesarev.bookfinder.databinding.ActivityHomeBinding
+import com.google.android.material.search.SearchBar
+import com.google.android.material.search.SearchView
 
 class HomeActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,5 +23,9 @@ class HomeActivity : AppCompatActivity() {
         val navController = homeScreenHostFrag.findNavController()
 
         bottomNavigationView.setupWithNavController(navController)
+
+        val searchBar = findViewById<SearchBar>(R.id.search_bar)
+        val searchView = findViewById<SearchView>(R.id.search_view)
+        searchView.setupWithSearchBar(searchBar)
     }
 }

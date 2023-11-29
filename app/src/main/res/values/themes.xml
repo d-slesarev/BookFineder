@@ -18,6 +18,11 @@
         <item name="android:navigationBarColor">@color/splash_back</item>
     </style>
 
+    <style name="HomeScreenTheme" parent="Base.Theme.BookFinder">
+        <item name="android:statusBarColor">#C5A688</item>
+        <item name="android:navigationBarColor">@color/back_home_fragments</item>
+    </style>
+
     <style name="Widget.App.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.CheckBox</item>
     </style>

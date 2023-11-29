@@ -82,5 +82,4 @@
         <item name="backgroundTint">@color/m3_text_button_background_color_selector</item>
         <item name="rippleColor">#B1763E</item>
     </style>
-
 </resources>
