@@ -38,9 +38,10 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
+        style="@style/ShapeAppearance.Material3.Corner.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:itemBackground="?android:attr"
+        android:background="#FFD6CEC6"
         android:elevation="0.12dp"
         app:itemIconTint="@color/icons_color_nav"
         app:itemRippleColor="@color/cursor_color"
