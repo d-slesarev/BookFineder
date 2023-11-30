@@ -19,8 +19,8 @@
     </style>
 
     <style name="HomeScreenTheme" parent="Base.Theme.BookFinder">
-        <item name="android:statusBarColor">#C5A688</item>
-        <item name="android:navigationBarColor">@color/back_home_fragments</item>
+        <item name="android:statusBarColor">#B9A996</item>
+        <item name="android:navigationBarColor">#1A1511</item>
     </style>
 
     <style name="Widget.App.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
@@ -36,5 +36,10 @@
         <item name="colorSurface">#FFB1763E</item>
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorOnError">#FFB1763E</item>
+    </style>
+
+    <style name="ThemeOverlay.BookFinder.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
+        <item name="fullscreenTextColor">@color/light_blue_A200</item>
     </style>
 </resources>

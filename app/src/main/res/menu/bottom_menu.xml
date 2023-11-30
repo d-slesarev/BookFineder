@@ -6,15 +6,15 @@
         android:title="Home"
         android:icon="@drawable/ic_home_24"/>
     <item
-        android:id="@+id/searchScreen"
+        android:id="@+id/myBooksScreen"
         android:title="My Books"
         android:icon="@drawable/ic_bookmark_24"/>
     <item
-        android:id="@+id/myBooksScreen"
+        android:id="@+id/searchScreen"
         android:title="Search"
         android:icon="@drawable/ic_search_24"/>
     <item
         android:id="@+id/profileScreen"
-        android:title="Profile"
-        android:icon="@drawable/ic_profile_24"/>
+        android:title="More"
+        android:icon="@drawable/ic_menu_24"/>
 </menu>
