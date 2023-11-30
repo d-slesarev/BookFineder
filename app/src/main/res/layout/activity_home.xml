@@ -6,7 +6,7 @@
     android:id="@+id/home_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".home_screen.HomeActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout2"

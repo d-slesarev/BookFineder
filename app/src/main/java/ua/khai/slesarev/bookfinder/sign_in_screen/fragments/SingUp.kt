@@ -1,4 +1,4 @@
-package ua.khai.slesarev.bookfinder.sing_in.fragments
+package ua.khai.slesarev.bookfinder.sign_in_screen.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -12,7 +12,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import ua.khai.slesarev.bookfinder.R
-import ua.khai.slesarev.bookfinder.databinding.FragSingInBinding
 import ua.khai.slesarev.bookfinder.databinding.FragSingUpBinding
 
 class SingUp : Fragment() {

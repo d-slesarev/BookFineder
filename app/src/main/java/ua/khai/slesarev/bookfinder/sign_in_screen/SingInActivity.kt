@@ -1,14 +1,8 @@
-package ua.khai.slesarev.bookfinder.sing_in
+package ua.khai.slesarev.bookfinder.sign_in_screen
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
-import android.view.View
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import ua.khai.slesarev.bookfinder.R
-import ua.khai.slesarev.bookfinder.databinding.FragSingInBinding
 
 class SingInActivity : AppCompatActivity() {
 

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/singIn"
-        android:name="ua.khai.slesarev.bookfinder.sing_in.fragments.SingIn"
+        android:name="ua.khai.slesarev.bookfinder.sign_in_screen.fragments.SingIn"
         android:label="frag_sing_in"
         tools:layout="@layout/frag_sing_in" >
         <action
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/singUp"
-        android:name="ua.khai.slesarev.bookfinder.sing_in.fragments.SingUp"
+        android:name="ua.khai.slesarev.bookfinder.sign_in_screen.fragments.SingUp"
         android:label="frag_sing_up"
         tools:layout="@layout/frag_sing_up" >
         <action
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/passRecovery"
-        android:name="ua.khai.slesarev.bookfinder.sing_in.fragments.PassRecovery"
+        android:name="ua.khai.slesarev.bookfinder.sign_in_screen.fragments.PassRecovery"
         android:label="frag_pass_recovery"
         tools:layout="@layout/frag_pass_recovery" >
         <action
@@ -53,7 +53,7 @@
     </fragment>
     <activity
         android:id="@+id/homeActivity"
-        android:name="ua.khai.slesarev.bookfinder.HomeActivity"
+        android:name="ua.khai.slesarev.bookfinder.home_screen.HomeActivity"
         android:label="activity_home"
         tools:layout="@layout/activity_home"/>
 </navigation>

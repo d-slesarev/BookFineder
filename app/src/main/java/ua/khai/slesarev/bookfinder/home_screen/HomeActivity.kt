@@ -1,19 +1,18 @@
-package ua.khai.slesarev.bookfinder
+package ua.khai.slesarev.bookfinder.home_screen
 
-import android.os.Build
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.KeyEvent
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentTransaction
-import androidx.navigation.findNavController
+import android.view.Window
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.search.SearchBar
 import com.google.android.material.search.SearchView
-import ua.khai.slesarev.bookfinder.dialogs.FullscreenDialog
+import ua.khai.slesarev.bookfinder.R
 
 class HomeActivity : AppCompatActivity() {
 
@@ -37,15 +36,12 @@ class HomeActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.action_search -> {
 
-                    val fragmentManager = supportFragmentManager
-                    val newFragment = FullscreenDialog()
+                    val dialog = Dialog(this)
 
-                    val transaction = fragmentManager.beginTransaction()
-                    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    transaction
-                        .add(android.R.id.content, newFragment)
-                        .addToBackStack(null)
-                        .commit()
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialog.setContentView(R.layout.popup_dialog)
+                    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    dialog.show()
 
                     true
                 }

@@ -37,9 +37,4 @@
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorOnError">#FFB1763E</item>
     </style>
-
-    <style name="ThemeOverlay.BookFinder.FullscreenContainer" parent="">
-        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
-        <item name="fullscreenTextColor">@color/light_blue_A200</item>
-    </style>
 </resources>
