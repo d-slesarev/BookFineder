@@ -1,49 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".home_screen.HomeActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout2"
-        style="@style/MyAppBarStyle"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/appBarLayoutCard"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#F3F0EB"
+        app:cardBackgroundColor="#F3F0EB"
+        app:cardElevation="35dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout2"
+            style="@style/MyAppBarStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="60dp"
+            android:background="#F3F0EB"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.search.SearchBar
-                android:id="@+id/search_bar"
-                style="@style/Widget.Material3.SearchBar"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:backgroundTint="#FEFEFE"
-                android:hint="Search"
-                app:endIconMode="custom"
-                app:menu="@menu/searchbar_menu"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_height="wrap_content">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.search.SearchBar
+                    android:id="@+id/search_bar"
+                    style="@style/Widget.Material3.SearchBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:backgroundTint="#FEFEFE"
+                    android:hint="Search"
+                    app:endIconMode="custom"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.5"
+                    app:menu="@menu/searchbar_menu"
+                    tools:ignore="TouchTargetSizeCheck" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <com.google.android.material.search.SearchView
         android:id="@+id/search_view"
@@ -58,34 +70,43 @@
     </com.google.android.material.search.SearchView>
 
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bottomNavCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#F3F0E9"
-        android:elevation="12dp"
-        app:itemIconTint="@color/icons_color_nav"
-        app:itemRippleColor="@color/cursor_color"
-        app:itemTextColor="@color/cursor_color"
+        android:layout_height="60dp"
+        app:cardBackgroundColor="#F3F0EB"
+        app:cardElevation="45dp"
+        android:elevation="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_menu" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNav"
+            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F3F0E9"
+            app:itemIconTint="@color/icons_color_nav"
+            app:itemRippleColor="@color/cursor_color"
+            app:itemTextColor="@color/cursor_color"
+            app:menu="@menu/bottom_menu" />
+
+    </androidx.cardview.widget.CardView>
+
+
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-
-
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavCard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayoutCard"
         app:navGraph="@navigation/home_screan_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

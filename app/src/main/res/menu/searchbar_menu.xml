@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_search"
-        android:icon="@drawable/ic_account_24"
+        android:icon="@drawable/ic_big_avatar"
+        android:title="account"
         app:showAsAction="always"
-        android:title="account" />
+        android:menuCategory="secondary"/>
 
 </menu>

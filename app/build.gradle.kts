@@ -55,7 +55,8 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
 
-    implementation("com.readystatesoftware.systembartint:systembartint:1.0.3")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
 
 
     testImplementation("junit:junit:4.13.2")

@@ -1,18 +1,31 @@
 package ua.khai.slesarev.bookfinder.home_screen
 
 import android.app.Dialog
+import android.content.ContentValues.TAG
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.MenuItem
+import android.view.View
 import android.view.Window
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.search.SearchBar
 import com.google.android.material.search.SearchView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ua.khai.slesarev.bookfinder.R
+import javax.sql.DataSource
 
 class HomeActivity : AppCompatActivity() {
 
@@ -32,6 +45,38 @@ class HomeActivity : AppCompatActivity() {
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setupWithSearchBar(searchBar)
 
+
+        Glide.with(this)
+            .load(R.drawable.ic_big_avatar)
+            .centerCrop()
+            .circleCrop()
+            .sizeMultiplier(0.50f) //optional
+            .addListener(object : RequestListener<Drawable> {
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: com.bumptech.glide.request.target.Target<Drawable>?,
+                    dataSource: com.bumptech.glide.load.DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    Log.d(TAG, "loadImage: ready")
+                    resource?.let { renderProfileImage(it, searchBar) }
+                    return true
+                }
+
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    Log.e(TAG, "loadImage: failed")
+                    return true
+                }
+
+            }).submit()
+
         searchBar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.action_search -> {
@@ -50,6 +95,12 @@ class HomeActivity : AppCompatActivity() {
                     false
                 }
             }
+        }
+    }
+
+    private fun renderProfileImage(resource:Drawable, searchTopBar: SearchBar) {
+        lifecycleScope.launch(Dispatchers.Main){ //Running on Main/UI thread
+            searchTopBar.menu.findItem(R.id.action_search).icon = resource
         }
     }
 }
