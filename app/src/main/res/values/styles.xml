@@ -84,10 +84,37 @@
         <item name="rippleColor">#B1763E</item>
     </style>
 
+    <style name="TextButton2" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="enforceTextAppearance">false</item>
+        <item name="android:maxWidth">@dimen/m3_btn_max_width</item>
+        <item name="android:paddingLeft">@dimen/m3_btn_text_btn_padding_left</item>
+        <item name="android:paddingRight">@dimen/m3_btn_text_btn_padding_right</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:insetTop">@dimen/m3_btn_inset</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textAppearance">@macro/m3_comp_text_button_label_text_type</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.M3.Sys.Shape.Corner.Full2
+        </item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Material3.Button.TextButton</item>
+        <item name="android:textColor">@color/m3_text_button_foreground_color_selector</item>
+        <item name="iconTint">@color/m3_text_button_foreground_color_selector</item>
+        <item name="backgroundTint">@color/m3_text_button_background_color_selector</item>
+        <item name="rippleColor">#B1763E</item>
+    </style>
+
+    <style name="closeBtn" parent="">
+        <item name="rippleColor">#B1763E</item>
+    </style>
+
+    <style name="ShapeAppearance.M3.Sys.Shape.Corner.Full2" parent="">
+        <item name="cornerFamily">?attr/shapeCornerFamily</item>
+        <item name="cornerSize">0%</item>
+    </style>
+
     <style name="MyAppBarStyle" parent="Widget.Design.AppBarLayout">
         <item name="android:elevation">20dp</item>
         <item name="elevation">20dp</item>
-
     </style>
 
     <style name="Widget.Theme.BookFinder.ButtonBar.Fullscreen" parent="">

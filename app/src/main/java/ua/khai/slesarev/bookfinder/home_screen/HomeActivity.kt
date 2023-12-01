@@ -8,9 +8,9 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.view.Window
+import android.widget.ImageButton
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -25,13 +25,27 @@ import com.google.android.material.search.SearchView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ua.khai.slesarev.bookfinder.R
-import javax.sql.DataSource
 
 class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        val dialog = Dialog(this)
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.popup_dialog)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val closeBtn = dialog.findViewById<ImageButton>(R.id.backButton)
+
+        closeBtn.setOnClickListener(object : View.OnClickListener {
+
+            override fun onClick(view: View) {
+                dialog.dismiss()
+            }
+        })
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNav)
 
@@ -44,7 +58,6 @@ class HomeActivity : AppCompatActivity() {
         val searchBar = findViewById<SearchBar>(R.id.search_bar)
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setupWithSearchBar(searchBar)
-
 
         Glide.with(this)
             .load(R.drawable.ic_big_avatar)
@@ -81,11 +94,6 @@ class HomeActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.action_search -> {
 
-                    val dialog = Dialog(this)
-
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                    dialog.setContentView(R.layout.popup_dialog)
-                    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     dialog.show()
 
                     true
@@ -96,6 +104,7 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
 
     private fun renderProfileImage(resource:Drawable, searchTopBar: SearchBar) {

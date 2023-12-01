@@ -7,55 +7,56 @@
     android:layout_height="match_parent"
     tools:context=".home_screen.HomeActivity">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/appBarLayoutCard"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout2"
+        style="@style/MyAppBarStyle"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:cardBackgroundColor="#F3F0EB"
-        app:cardElevation="35dp"
+        android:background="#F3F0E9"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout2"
-            style="@style/MyAppBarStyle"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="#F3F0EB"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.search.SearchBar
+                android:id="@+id/search_bar"
+                style="@style/Widget.Material3.SearchBar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="44dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="#FEFEFE"
+                android:hint="Search"
+                app:endIconMode="custom"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5"
+                app:menu="@menu/searchbar_menu"
+                tools:ignore="TouchTargetSizeCheck" />
 
-                <com.google.android.material.search.SearchBar
-                    android:id="@+id/search_bar"
-                    style="@style/Widget.Material3.SearchBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:backgroundTint="#FEFEFE"
-                    android:hint="Search"
-                    app:endIconMode="custom"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.5"
-                    app:menu="@menu/searchbar_menu"
-                    tools:ignore="TouchTargetSizeCheck" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/appBarLayoutCard"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                app:cardBackgroundColor="#BEA5A29E"
+                app:cardElevation="35dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </com.google.android.material.appbar.AppBarLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.appbar.AppBarLayout>
+
 
     <com.google.android.material.search.SearchView
         android:id="@+id/search_view"
@@ -95,7 +96,6 @@
     </androidx.cardview.widget.CardView>
 
 
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -106,7 +106,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayoutCard"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2"
         app:navGraph="@navigation/home_screan_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
