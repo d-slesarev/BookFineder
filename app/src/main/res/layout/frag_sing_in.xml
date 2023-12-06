@@ -9,7 +9,7 @@ android:layout_height="match_parent"
 android:background="@color/splash_back"
 android:clipToPadding="true"
 tools:viewBindingIgnore="true"
-tools:context=".sign_in_screen.fragments.SingIn">
+tools:context=".ui.sign_in_screen.fragments.SingIn.SingIn">
 
     <Button
         android:id="@+id/singInBtn"

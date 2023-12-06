@@ -1,7 +1,6 @@
-package ua.khai.slesarev.bookfinder.sign_in_screen.fragments
+package ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SignUp
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -12,21 +11,20 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import ua.khai.slesarev.bookfinder.home_screen.HomeActivity
 import ua.khai.slesarev.bookfinder.R
-import ua.khai.slesarev.bookfinder.databinding.FragSingInBinding
+import ua.khai.slesarev.bookfinder.databinding.FragSingUpBinding
 
-class SingIn : Fragment() {
+class SingUp : Fragment() {
 
-    private lateinit var binding: FragSingInBinding
+    private lateinit var binding: FragSingUpBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
-       binding = FragSingInBinding.inflate(inflater, container, false)
+        binding = FragSingUpBinding.inflate(inflater, container, false)
+        Log.i("MyLog", "Pressed Registration111")
 
         return binding.root
     }
@@ -34,31 +32,26 @@ class SingIn : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.SingUpBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_singIn_to_singUp)
+        binding.logInBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_singUp_to_singIn)
             Log.i("MyLog", "Pressed Registration!!!")
         }
 
-        binding.singInBtn.setOnClickListener {
-            val intent = Intent(requireContext(), HomeActivity::class.java)
-            startActivity(intent)
+        binding.createAccountBtn.setOnClickListener {
+
         }
 
-        binding.forgotBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_singIn_to_passRecovery)
-        }
-
-        binding.passSignTexInp.setOnEditorActionListener { _, actionId, event ->
+        binding.passRegisterTexImp.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE ||
                 (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
             ) {
                 // Обработка события "Готово" или "Enter"
-                binding.passSignTexInp.clearFocus()
+                binding.passRegisterTexImp.clearFocus()
 
                 // Скрытие клавиатуры
                 val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-                inputMethodManager.hideSoftInputFromWindow(binding.passSignTexInp.windowToken, 0)
+                inputMethodManager.hideSoftInputFromWindow(binding.passRegisterTexImp.windowToken, 0)
 
                 return@setOnEditorActionListener true
             }

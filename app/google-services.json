@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "292942742398",
+    "project_id": "book-finder-2b1d4",
+    "storage_bucket": "book-finder-2b1d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292942742398:android:0b22fea42b35fd8665692f",
+        "android_client_info": {
+          "package_name": "ua.khai.slesarev.bookfinder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnaVw7WeDc4_keRzsSoEJkD7hE616BbWQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

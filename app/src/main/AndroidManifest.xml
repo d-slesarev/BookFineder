@@ -13,13 +13,13 @@
         android:theme="@style/Theme.BookFinder"
         tools:targetApi="31">
         <activity
-            android:name=".home_screen.HomeActivity"
+            android:name=".ui.home_screen.HomeActivity"
             android:exported="true"
             android:theme="@style/HomeScreenTheme">
         </activity>
 
         <activity
-            android:name=".sign_in_screen.SingInActivity"
+            android:name=".ui.sign_in_screen.SingInActivity"
             android:theme="@style/splashScreenTheme"
             android:exported="true">
             <intent-filter>

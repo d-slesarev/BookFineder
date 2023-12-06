@@ -1,4 +1,4 @@
-package ua.khai.slesarev.bookfinder.home_screen
+package ua.khai.slesarev.bookfinder.ui.home_screen
 
 import android.app.Dialog
 import android.content.ContentValues.TAG

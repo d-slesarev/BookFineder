@@ -1,4 +1,4 @@
-package ua.khai.slesarev.bookfinder.sign_in_screen
+package ua.khai.slesarev.bookfinder.ui.sign_in_screen
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

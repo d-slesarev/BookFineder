@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/homeScreen"
-        android:name="ua.khai.slesarev.bookfinder.home_screen.fragments.HomeScreen"
+        android:name="ua.khai.slesarev.bookfinder.ui.home_screen.fragments.HomeScreen"
         android:label="frag_home"
         tools:layout="@layout/frag_home" />
     <fragment
         android:id="@+id/searchScreen"
-        android:name="ua.khai.slesarev.bookfinder.home_screen.fragments.SearchScreen"
+        android:name="ua.khai.slesarev.bookfinder.ui.home_screen.fragments.SearchScreen"
         android:label="frag_search"
         tools:layout="@layout/frag_search" />
     <fragment
         android:id="@+id/myBooksScreen"
-        android:name="ua.khai.slesarev.bookfinder.home_screen.fragments.MyBooksScreen"
+        android:name="ua.khai.slesarev.bookfinder.ui.home_screen.fragments.MyBooksScreen"
         android:label="frag_my_books"
         tools:layout="@layout/frag_my_books" />
     <fragment
         android:id="@+id/profileScreen"
-        android:name="ua.khai.slesarev.bookfinder.home_screen.fragments.MoreScreen"
+        android:name="ua.khai.slesarev.bookfinder.ui.home_screen.fragments.MoreScreen"
         android:label="frag_profile"
         tools:layout="@layout/frag_more" />
 </navigation>
