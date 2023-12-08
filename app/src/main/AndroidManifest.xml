@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dist="http://schemas.android.com/apk/distribution"
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
@@ -12,16 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookFinder"
         tools:targetApi="31">
-        <activity
-            android:name=".ui.home_screen.HomeActivity"
-            android:exported="true"
-            android:theme="@style/HomeScreenTheme">
-        </activity>
 
         <activity
-            android:name=".ui.sign_in_screen.SingInActivity"
-            android:theme="@style/splashScreenTheme"
-            android:exported="true">
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:theme="@style/splashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,9 +25,22 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.home_screen.HomeActivity"
+            android:exported="true"
+            android:theme="@style/HomeScreenTheme">
+
+        </activity>
+
+        <activity
+            android:name=".ui.sign_in_screen.SingInActivity"
+            android:exported="false"
+            android:theme="@style/splashScreenTheme">
+        </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
+
 </manifest>

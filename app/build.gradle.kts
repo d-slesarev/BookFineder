@@ -58,6 +58,8 @@ dependencies {
 
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.github.bumptech.glide:glide:4.15.1")
+
+
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("com.google.firebase:firebase-database:20.3.0")
 
@@ -79,6 +81,7 @@ dependencies {
     //OkHTTP client
     implementation ("com.squareup.okhttp3:okhttp:4.9.1")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.7.2")
+
     //Gson
     implementation ("com.google.code.gson:gson:2.10.1")
 

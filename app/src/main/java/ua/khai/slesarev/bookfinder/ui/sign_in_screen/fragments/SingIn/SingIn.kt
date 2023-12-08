@@ -36,7 +36,6 @@ class SingIn : Fragment() {
 
         binding.SingUpBtn.setOnClickListener {
             findNavController().navigate(R.id.action_singIn_to_singUp)
-            Log.i("MyLog", "Pressed Registration!!!")
         }
 
         binding.singInBtn.setOnClickListener {
