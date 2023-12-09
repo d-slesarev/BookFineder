@@ -1,4 +1,28 @@
 <resources>
     <string name="app_name">BookFinder</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    // Для helperText
+
+    <string name="invalid_email">Incorrect e-mail</string>
+    <string name="email_in_use">This e-mail is already in use</string>
+    <string name="invalid_credential">The e-mail or password is incorrect</string>
+    <string name="week_password">Password is too simple or short</string>
+
+    <string name="correctly">Correctly</string>
+    <string name="not_checked">Not checked</string>
+    <string name="required">Required</string>
+
+    // Для AlertDialogs
+
+    <string name="unknown">Unknown error</string>
+    <string name="unknown_message">This may be a temporary problem, please try again later.</string>
+    <string name="OK">OK</string>
+    <string name="server">Server error</string>
+    <string name="server_message">Please contact the support center with your problem.</string>
+    <string name="confirm">Confirm your e-mail</string>
+    <string name="confirm_message">We\'ve sent you a link to confirm your email. Please go to your email and follow the confirmation link.</string>
+
+
+
 </resources>

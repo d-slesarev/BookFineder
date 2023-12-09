@@ -6,5 +6,5 @@ import ua.khai.slesarev.bookfinder.ui.sign_in_screen.SingInActivity
 
 interface AccountHelper {
 
-    fun signUpWithEmailPassword(email:String, password:String, username: String):Response
+    suspend fun signUpWithEmailPassword(email:String, password:String, username: String):Response
 }

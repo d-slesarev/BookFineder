@@ -1,39 +1,42 @@
 package ua.khai.slesarev.bookfinder.util.AccountHelper
 
-import android.annotation.SuppressLint
-import android.app.Application
 import android.util.Log
-import com.google.android.gms.tasks.Task
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Firebase
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import ua.khai.slesarev.bookfinder.data.model.User
-import ua.khai.slesarev.bookfinder.ui.sign_in_screen.SingInActivity
+import ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SignUp.UiState
 
-class FirebaseAccHelper(private val activity: SingInActivity) : AccountHelper {
-    override fun signUpWithEmailPassword(email: String,password: String,username: String): Response {
-        lateinit var result: Response
+class FirebaseAccHelper() : AccountHelper {
+
+    private val TAG = "FirebaseAuth"
+    private var auth: FirebaseAuth = Firebase.auth
+    private var database: FirebaseDatabase = FirebaseDatabase
+        .getInstance("https://book-finder-2b1d4-default-rtdb.europe-west1.firebasedatabase.app/")
+
+    fun emptyCheck(email: String, password: String, username: String): Response {
 
         if (email.isEmpty() && password.isEmpty() && username.isEmpty()) {
-            result = Response.ERROR_MISSING_EMAIL_AND_PASSWORD_AND_NAME
+            return Response.ERROR_MISSING_EMAIL_AND_PASSWORD_AND_NAME
         } else {
             if (email.isEmpty() && password.isEmpty()) {
-                result = Response.ERROR_MISSING_EMAIL_AND_PASSWORD
+                return Response.ERROR_MISSING_EMAIL_AND_PASSWORD
             } else {
                 if (email.isEmpty() && username.isEmpty()) {
-                    result = Response.ERROR_MISSING_EMAIL_AND_NAME
+                    return Response.ERROR_MISSING_EMAIL_AND_NAME
                 } else {
                     if (username.isEmpty() && password.isEmpty()) {
-                        result = Response.ERROR_MISSING_NAME_AND_PASSWORD
+                        return Response.ERROR_MISSING_NAME_AND_PASSWORD
                     } else {
-                        result = if (email.isNotEmpty()) {
+                        return if (email.isNotEmpty()) {
                             if (password.isNotEmpty()) {
                                 if (username.isNotEmpty()) {
-                                    performSignUpTransaction(email, password, username)
+                                    Response.SUCCESS
                                 } else {
                                     Response.ERROR_MISSING_NAME
                                 }
@@ -47,68 +50,50 @@ class FirebaseAccHelper(private val activity: SingInActivity) : AccountHelper {
                 }
             }
         }
-
-        return result
     }
 
-    private fun performSignUpTransaction(email: String, password: String, username: String): Response {
-        lateinit var result: Response
-        activity.auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener{ task: Task<AuthResult> ->
+    override suspend fun signUpWithEmailPassword(
+        email: String,
+        password: String,
+        username: String
+    ): Response {
+        var result: Response = Response.DEFAULT
 
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val user = task.result?.user!!
-
-                    if (addUserToDatabase(user?.uid, email, username) == Response.SUCCESS) {
-                        if (sendEmailVerification(user) == Response.SUCCESS) {
-                            result = Response.SUCCESS
-                        } else {
-                            if (rollBackAddUser(user?.uid) == Response.SUCCESS) {
-                                result = Response.ERROR_UNKNOWN
-                            } else {
-                                result = Response.SERVER_ERROR
+                    Log.d(TAG, "createUserWithEmail: SUCCESS")
+                     Response.SUCCESS
+                } else {
+                    val exception = task.exception
+                    if (exception is FirebaseAuthException) {
+                        val errorCode = exception.errorCode
+                        when (errorCode) {
+                            "ERROR_INVALID_EMAIL" -> {
+                                result = Response.ERROR_INVALID_EMAIL
                             }
 
-                            if (rollBackRegister(user) == Response.SUCCESS) {
+                            "ERROR_EMAIL_ALREADY_IN_USE" -> {
+                                result = Response.ERROR_EMAIL_ALREADY_IN_USE
+                            }
+
+                            "ERROR_INVALID_CREDENTIAL" -> {
+                                result = Response.ERROR_INVALID_CREDENTIAL
+                            }
+
+                            "ERROR_WEAK_PASSWORD" -> {
+                                result = Response.ERROR_WEAK_PASSWORD
+                            }
+
+                            else -> {
                                 result = Response.ERROR_UNKNOWN
-                            } else {
-                                result = Response.SERVER_ERROR
                             }
                         }
                     } else {
-                        if (rollBackRegister(user) == Response.SUCCESS) {
-                            result = Response.ERROR_UNKNOWN
-                        } else {
-                            result = Response.SERVER_ERROR
+                        if (exception != null) {
+                            Log.d(TAG, "sendEmailVerification: " + exception.message)
                         }
-                    }
-
-                    activity.auth.signOut()
-
-                } else {
-                    val exception = task.exception as FirebaseAuthException
-                    val errorCode = exception.errorCode
-
-                    when (errorCode) {
-                        "ERROR_INVALID_EMAIL" -> {
-                            result = Response.ERROR_INVALID_EMAIL
-                        }
-
-                        "ERROR_EMAIL_ALREADY_IN_USE" -> {
-                            result = Response.ERROR_EMAIL_ALREADY_IN_USE
-                        }
-
-                        "ERROR_INVALID_CREDENTIAL" -> {
-                            result = Response.ERROR_INVALID_CREDENTIAL
-                        }
-
-                        "ERROR_WEAK_PASSWORD" -> {
-                            result = Response.ERROR_WEAK_PASSWORD
-                        }
-
-                        else -> {
-                            result = Response.ERROR_UNKNOWN
-                        }
+                        result = Response.ERROR_UNKNOWN
                     }
                 }
             }
@@ -116,65 +101,110 @@ class FirebaseAccHelper(private val activity: SingInActivity) : AccountHelper {
         return result
     }
 
-    fun sendEmailVerification(user: FirebaseUser): Response {
-        lateinit var result: Response
+    suspend fun sendEmailVerification(): Response {
+        var result: Response = Response.DEFAULT
+        val user = auth.currentUser
 
-        user.sendEmailVerification().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                result = Response.SUCCESS
-            } else {
-                result = Response.ERROR_UNKNOWN
+        if (user != null) {
+            try {
+                user.sendEmailVerification()
+                    .addOnSuccessListener {
+                        result = Response.SUCCESS
+                        Log.d(TAG, "sendEmailVerification: SUCCESS")
+                    }
+                    .addOnFailureListener { exception ->
+                        result = Response.ERROR_UNKNOWN
+                        Log.d(TAG, "sendEmailVerification: " + exception.message)
+                    }
+            } catch (e: Exception) {
+                Log.d(TAG, "Exception: " + e.message)
+            }
+        }
+
+        return result
+
+    }
+
+    suspend fun addUserToDatabase(email: String, username: String): Response {
+        var result: Response = Response.DEFAULT
+        val uid = auth.currentUser?.uid
+
+        if (uid != null) {
+            try {
+                val databaseReference = database
+                    .getReference(uid)
+
+                val newUser = User(uid, username, email)
+                databaseReference.setValue(newUser)
+                    .addOnSuccessListener {
+                        result = Response.SUCCESS
+                        Log.d(TAG, "addUserToDatabase: SUCCESS")
+                    }
+                    .addOnFailureListener { exception ->
+                        result = Response.ERROR_UNKNOWN
+                        Log.d(TAG, "addUserToDatabase: " + exception.message)
+                    }
+            } catch (e: Exception) {
+                Log.d(TAG, "Exception: " + e.message)
             }
         }
 
         return result
     }
 
-    fun addUserToDatabase(uid: String?, email: String?, username: String): Response {
-        lateinit var result: Response
+    suspend fun rollBackAddUser(): Response {
+        var result: Response = Response.DEFAULT
+        val uid = auth.currentUser?.uid
 
-        uid?.let {
-            val databaseReference = FirebaseDatabase.getInstance().getReference("users").child(it)
-            val newUser = User(username, email!!)
-            databaseReference.setValue(newUser).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    result = Response.SUCCESS
-                } else {
-                    result = Response.ERROR_UNKNOWN
+        return withContext(Dispatchers.IO) {
+            if (uid != null) {
+                try {
+                    val databaseReference = database
+                        .getReference(uid)
+
+                    databaseReference.removeValue()
+                        .addOnSuccessListener {
+                            result = Response.SUCCESS
+                            Log.d(TAG, "rollBackAddUser: SUCCESS")
+                        }
+                        .addOnFailureListener { exception ->
+                            result = Response.ERROR_UNKNOWN
+                            Log.d(TAG, "rollBackAddUser: " + exception.message)
+                        }
+                } catch (e: Exception) {
+                    Log.d(TAG, "Exception: " + e.message)
                 }
             }
+
+            return@withContext result
         }
-        return result
+
     }
 
-    fun rollBackAddUser(uid: String?): Response {
-        lateinit var result: Response
+    suspend fun rollBackRegister(): Response {
+        var result: Response = Response.DEFAULT
+        val user = auth.currentUser
 
-        uid?.let {
-            val databaseReference = FirebaseDatabase.getInstance().getReference("users").child(it)
-            databaseReference.removeValue().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    result = Response.SUCCESS
-                } else {
-                    result = Response.SERVER_ERROR
+        return withContext(Dispatchers.IO) {
+            if (user != null) {
+                try {
+                    user.delete()
+                        .addOnSuccessListener {
+                            result = Response.SUCCESS
+                            Log.d(TAG, "rollBackRegister: SUCCESS!")
+                        }
+                        .addOnFailureListener { exception ->
+                            result = Response.ERROR_UNKNOWN
+                            Log.d(TAG, "rollBackRegister: " + exception.message)
+                        }
+                } catch (e: Exception) {
+                    Log.d(TAG, "Exception: " + e.message)
                 }
             }
+
+            return@withContext result
         }
-        return result
-    }
 
-    fun rollBackRegister(user: FirebaseUser): Response {
-        lateinit var result: Response
-
-        user?.delete()
-            ?.addOnCompleteListener { deleteTask ->
-                if (deleteTask.isSuccessful) {
-                    result = Response.SUCCESS
-                } else {
-                    result = Response.SERVER_ERROR
-                }
-            }
-
-        return result
     }
 }
+
