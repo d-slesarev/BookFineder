@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -24,23 +25,10 @@ import ua.khai.slesarev.bookfinder.util.AccountHelper.Response
 
 class SingInActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SignUpViewModel
-    lateinit var auth: FirebaseAuth
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_BookFinder)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sing_in)
-
-        auth = Firebase.auth
-
     }
 
-    fun getFirebaseAuth(): FirebaseAuth {
-        return auth
-    }
-
-    fun getSingInActivity(): SingInActivity {
-        return this
-    }
 }

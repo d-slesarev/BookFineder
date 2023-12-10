@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import ua.khai.slesarev.bookfinder.ui.home_screen.HomeActivity
 import ua.khai.slesarev.bookfinder.R
@@ -33,6 +34,15 @@ class SingIn : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val navController = findNavController()
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.singIn) {
+                navController.popBackStack(R.id.singUp, true)
+                navController.popBackStack(R.id.passRecovery, true)
+            }
+        }
 
         binding.SingUpBtn.setOnClickListener {
             findNavController().navigate(R.id.action_singIn_to_singUp)

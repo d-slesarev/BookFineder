@@ -4,40 +4,30 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.tasks.Task
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.launch
 import ua.khai.slesarev.bookfinder.R
-import ua.khai.slesarev.bookfinder.data.model.User
 import ua.khai.slesarev.bookfinder.databinding.FragSingUpBinding
 import ua.khai.slesarev.bookfinder.ui.sign_in_screen.SingInActivity
-import ua.khai.slesarev.bookfinder.util.AccountHelper.FirebaseAccHelper
 import ua.khai.slesarev.bookfinder.util.AccountHelper.Response
 import ua.khai.slesarev.bookfinder.util.resourse_util.getResourseMap
 
 class SingUp : Fragment() {
 
-    private lateinit var binding: FragSingUpBinding
+    private val binding by lazy { FragSingUpBinding.inflate(layoutInflater) }
     private val viewModel: SignUpViewModel by viewModels()
     private lateinit var act: SingInActivity
     private val resorMap: Map<String, List<String>> = getResourseMap()
@@ -46,8 +36,6 @@ class SingUp : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        binding = FragSingUpBinding.inflate(inflater, container, false)
         act = (activity as SingInActivity)
 
         return binding.root
@@ -67,7 +55,10 @@ class SingUp : Fragment() {
             var email = binding.emailRegisterTexInp.text.toString()
             var password = binding.passRegisterTexImp.text.toString()
 
-            viewModel.signUpWithEmailPassword(email, password, userName)
+            lifecycleScope.launch {
+                viewModel.signUpWithEmailPassword(email, password, userName)
+            }
+
         }
 
         binding.passRegisterTexImp.setOnEditorActionListener { _, actionId, event ->
@@ -94,6 +85,16 @@ class SingUp : Fragment() {
         }
     }
 
+    private fun onLoad() = with(binding) {
+        progressBar.visibility = View.VISIBLE
+        createAccountBtn.isEnabled = false
+        logInBtn.isEnabled = false
+    }
+
+    fun onBackPressed() {
+        // Перехватываем событие нажатия кнопки "Назад"
+        // В данном случае, ничего не делаем, чтобы предотвратить стандартное поведение
+    }
 
     fun getStringResourceByName(context: Context, resourceName: String): String? {
         val resId: Int = context.resources.getIdentifier(resourceName, "string", context.packageName)
@@ -148,7 +149,12 @@ class SingUp : Fragment() {
         }
     }
 
-    private fun updateRender(response:String){
+    private fun updateRender(response:String) = with(binding){
+
+        progressBar.visibility = View.GONE
+        createAccountBtn.isEnabled = true
+        logInBtn.isEnabled = true
+
         when (response) {
 
             Response.ERROR_INVALID_EMAIL.toString() -> {
@@ -196,35 +202,55 @@ class SingUp : Fragment() {
             }
 
             Response.ERROR_UNKNOWN.toString() -> {
+
+                setResourses(response)
+
+                val alertDialog =
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(context?.getString(R.string.unknown))
                     .setMessage(context?.getString(R.string.unknown_message))
                     .setPositiveButton("OK") { dialog, which ->
-                    }.show()
+                        dialog.dismiss()
+                    }
+                    .setCancelable(false)
+                    .create()
 
-                setResourses(response)
+                alertDialog.show()
             }
 
             Response.SERVER_ERROR.toString() -> {
+
+                setResourses(response)
+
+                val alertDialog =
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(context?.getString(R.string.server))
                     .setMessage(context?.getString(R.string.server_message))
                     .setPositiveButton("OK") { dialog, which ->
-                    }.show()
+                        dialog.dismiss()
+                    }
+                    .setCancelable(false)
+                    .create()
 
-                setResourses(response)
+                alertDialog.show()
             }
 
             Response.SUCCESS.toString() -> {
+
+                setResourses(response)
+
+                val alertDialog =
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(context?.getString(R.string.confirm))
                     .setMessage(context?.getString(R.string.confirm_message))
                     .setPositiveButton("OK") { dialog, which ->
+                        dialog.dismiss()
                         findNavController().navigate(R.id.action_singUp_to_singIn)
-                    }.show()
+                    }
+                    .setCancelable(false)
+                    .create()
 
-                setResourses(response)
-
+                alertDialog.show()
             }
 
             else -> {}
@@ -235,7 +261,7 @@ class SingUp : Fragment() {
 
         when (uiState) {
             is UiState.Loading -> {
-
+                onLoad()
             }
             is UiState.Success -> {
                 updateRender(uiState.response)

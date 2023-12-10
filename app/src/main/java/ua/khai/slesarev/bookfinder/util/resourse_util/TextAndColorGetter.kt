@@ -12,9 +12,9 @@ val resourses: Map<String, List<String>> = mapOf(
     "ERROR_MISSING_EMAIL_AND_NAME" to listOf("required", "not_checked", "required", "RED", "BROWN", "RED"),
     "ERROR_MISSING_NAME_AND_PASSWORD" to listOf("not_checked", "required", "required", "BROWN", "RED", "RED"),
     "ERROR_MISSING_EMAIL_AND_PASSWORD_AND_NAME" to listOf("required", "required", "required", "BROWN", "BROWN", "BROWN"),
-    "ERROR_UNKNOWN" to listOf("Correctly", "Correctly", "Correctly", "GREEN", "GREEN", "GREEN"),
-    "SERVER_ERROR" to listOf("Correctly", "Correctly", "Correctly", "GREEN", "GREEN", "GREEN"),
-    "SUCCESS" to listOf("Correctly", "Correctly", "Correctly", "GREEN", "GREEN", "GREEN"),
+    "ERROR_UNKNOWN" to listOf("correctly", "correctly", "correctly", "GREEN", "GREEN", "GREEN"),
+    "SERVER_ERROR" to listOf("correctly", "correctly", "correctly", "GREEN", "GREEN", "GREEN"),
+    "SUCCESS" to listOf("correctly", "correctly", "correctly", "GREEN", "GREEN", "GREEN"),
 )
 
 fun getResourseMap(): Map<String, List<String>>{

@@ -8,9 +8,12 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.auth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import ua.khai.slesarev.bookfinder.data.model.User
 import ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SignUp.UiState
+import kotlin.coroutines.resume
 
 class FirebaseAccHelper() : AccountHelper {
 
@@ -57,99 +60,101 @@ class FirebaseAccHelper() : AccountHelper {
         password: String,
         username: String
     ): Response {
-        var result: Response = Response.DEFAULT
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "createUserWithEmail: SUCCESS")
-                     Response.SUCCESS
-                } else {
-                    val exception = task.exception
-                    if (exception is FirebaseAuthException) {
-                        val errorCode = exception.errorCode
-                        when (errorCode) {
-                            "ERROR_INVALID_EMAIL" -> {
-                                result = Response.ERROR_INVALID_EMAIL
-                            }
-
-                            "ERROR_EMAIL_ALREADY_IN_USE" -> {
-                                result = Response.ERROR_EMAIL_ALREADY_IN_USE
-                            }
-
-                            "ERROR_INVALID_CREDENTIAL" -> {
-                                result = Response.ERROR_INVALID_CREDENTIAL
-                            }
-
-                            "ERROR_WEAK_PASSWORD" -> {
-                                result = Response.ERROR_WEAK_PASSWORD
-                            }
-
-                            else -> {
-                                result = Response.ERROR_UNKNOWN
-                            }
-                        }
+        return suspendCancellableCoroutine { continuation ->
+            Log.w(TAG, "createUserWithEmail: Started!")
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "createUserWithEmail: SUCCESS!")
+                        continuation.resume(Response.SUCCESS)
                     } else {
-                        if (exception != null) {
-                            Log.d(TAG, "sendEmailVerification: " + exception.message)
+                        val exception = task.exception
+                        if (exception is FirebaseAuthException) {
+                            val errorCode = exception.errorCode
+                            when (errorCode) {
+                                "ERROR_INVALID_EMAIL" -> {
+                                    continuation.resume(Response.ERROR_INVALID_EMAIL)
+                                }
+
+                                "ERROR_EMAIL_ALREADY_IN_USE" -> {
+                                    continuation.resume(Response.ERROR_EMAIL_ALREADY_IN_USE)
+                                }
+
+                                "ERROR_INVALID_CREDENTIAL" -> {
+                                    continuation.resume(Response.ERROR_INVALID_CREDENTIAL)
+                                }
+
+                                "ERROR_WEAK_PASSWORD" -> {
+                                    continuation.resume(Response.ERROR_WEAK_PASSWORD)
+                                }
+
+                                else -> {
+                                    continuation.resume(Response.ERROR_UNKNOWN)
+                                }
+                            }
+                        } else {
+                            if (exception != null) {
+                                Log.d(TAG, "sendEmailVerification: " + exception.message)
+                            }
+                            continuation.resume(Response.ERROR_UNKNOWN)
                         }
-                        result = Response.ERROR_UNKNOWN
                     }
                 }
-            }
+            Log.w(TAG, "createUserWithEmail: Finished!")
+        }
 
-        return result
     }
 
     suspend fun sendEmailVerification(): Response {
-        var result: Response = Response.DEFAULT
-        val user = auth.currentUser
+        return suspendCancellableCoroutine { continuation ->
+            Log.w(TAG, "sendEmailVerification: Started!")
+            val user = auth.currentUser
 
-        if (user != null) {
-            try {
-                user.sendEmailVerification()
-                    .addOnSuccessListener {
-                        result = Response.SUCCESS
-                        Log.d(TAG, "sendEmailVerification: SUCCESS")
-                    }
-                    .addOnFailureListener { exception ->
-                        result = Response.ERROR_UNKNOWN
-                        Log.d(TAG, "sendEmailVerification: " + exception.message)
-                    }
-            } catch (e: Exception) {
-                Log.d(TAG, "Exception: " + e.message)
+            if (user != null) {
+                try {
+                    user.sendEmailVerification()
+                        .addOnSuccessListener {
+                            continuation.resume(Response.SUCCESS)
+                            Log.d(TAG, "sendEmailVerification: SUCCESS!")
+                        }
+                        .addOnFailureListener { exception ->
+                            continuation.resume(Response.ERROR_UNKNOWN)
+                            Log.d(TAG, "sendEmailVerification: " + exception.message)
+                        }
+                } catch (e: Exception) {
+                    Log.d(TAG, "Exception: " + e.message)
+                }
             }
+            Log.w(TAG, "sendEmailVerification: Finished!")
         }
-
-        return result
-
     }
 
     suspend fun addUserToDatabase(email: String, username: String): Response {
-        var result: Response = Response.DEFAULT
-        val uid = auth.currentUser?.uid
+        return suspendCancellableCoroutine { continuation ->
+            Log.w(TAG, "addUserToDatabase: Started!")
+            val uid = auth.currentUser?.uid
 
-        if (uid != null) {
-            try {
-                val databaseReference = database
-                    .getReference(uid)
+            if (uid != null) {
+                try {
+                    val databaseReference = database
+                        .getReference(uid)
 
-                val newUser = User(uid, username, email)
-                databaseReference.setValue(newUser)
-                    .addOnSuccessListener {
-                        result = Response.SUCCESS
-                        Log.d(TAG, "addUserToDatabase: SUCCESS")
-                    }
-                    .addOnFailureListener { exception ->
-                        result = Response.ERROR_UNKNOWN
-                        Log.d(TAG, "addUserToDatabase: " + exception.message)
-                    }
-            } catch (e: Exception) {
-                Log.d(TAG, "Exception: " + e.message)
+                    val newUser = User(uid, username, email)
+                    databaseReference.setValue(newUser)
+                        .addOnSuccessListener {
+                            continuation.resume(Response.SUCCESS)
+                            Log.d(TAG, "addUserToDatabase: SUCCESS!")
+                        }
+                        .addOnFailureListener { exception ->
+                            continuation.resume(Response.ERROR_UNKNOWN)
+                            Log.d(TAG, "addUserToDatabase: " + exception.message)
+                        }
+                } catch (e: Exception) {
+                    Log.d(TAG, "Exception: " + e.message)
+                }
             }
+            Log.w(TAG, "addUserToDatabase: Finished!")
         }
-
-        return result
     }
 
     suspend fun rollBackAddUser(): Response {

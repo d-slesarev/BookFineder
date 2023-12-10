@@ -39,102 +39,57 @@ import ua.khai.slesarev.bookfinder.util.AccountHelper.AccountHelperProvider
 import ua.khai.slesarev.bookfinder.util.AccountHelper.FirebaseAccHelper
 import ua.khai.slesarev.bookfinder.util.AccountHelper.Response
 
-class SignUpViewModel(application: Application) : AndroidViewModel(application){
+class SignUpViewModel(application: Application) : AndroidViewModel(application) {
 
     private val accHelper: FirebaseAccHelper = FirebaseAccHelper()
 
-    fun uiState(): LiveData<UiState> = uiState
     val uiState: MutableLiveData<UiState> = MutableLiveData()
 
     private val TAG = "FirebaseAuth"
 
-    @RequiresApi(Build.VERSION_CODES.P)
-    fun signUpWithEmailPassword(email: String, password: String, username: String) {
-        lateinit var result: Response
+    suspend fun signUpWithEmailPassword(email: String, password: String, username: String) {
+        lateinit var respSignUp: Response
+        lateinit var respAddUser: Response
+        lateinit var respSendEmail: Response
 
-        var respSignUp:Response = Response.SUCCESS
-        var respAddUser:Response = Response.SUCCESS
-        var respSendEmail:Response = Response.SUCCESS
+        val chackValue = accHelper.emptyCheck(email, password, username)
 
-        viewModelScope.launch {
+        if (chackValue == Response.SUCCESS){
             try {
+                uiState.value = UiState.Loading
+                respSignUp = accHelper.signUpWithEmailPassword(email, password, username)
 
-                respSignUp = withContext(Dispatchers.IO) {
-                    // Вызываете первый сетевой метод
-                    accHelper.signUpWithEmailPassword(email, password, username)
-                }
+                if (respSignUp == Response.SUCCESS) {
 
-                Log.d(TAG, "respSignUp: $respSignUp")
+                    respAddUser = accHelper.addUserToDatabase(email, username)
 
-                val respAddUser = withContext(Dispatchers.IO) {
-                    // Вызываете второй сетевой метод, используя результат первого
-                    accHelper.addUserToDatabase(email, username)
-                }
+                    if (respAddUser == Response.SUCCESS) {
 
-                Log.d(TAG, "respAddUser: $respAddUser")
+                        respSendEmail = accHelper.sendEmailVerification()
 
-
-                val respSendEmail = withContext(Dispatchers.IO) {
-                    // Вызываете третий сетевой метод, используя результат второго
-                    accHelper.sendEmailVerification()
-                }
-
-                ///
-
-            } catch (e:Exception) {
-                throw Exception("Registration failed: ${e.message}")
-            }
-        }
-
-        if (respSignUp == Response.SUCCESS){
-
-
-            if (respAddUser == Response.SUCCESS){
-
-
-                if (respSendEmail == Response.SUCCESS){
-                    uiState.value = UiState.Success(Response.SUCCESS.toString())
-                }else {
-                    uiState.value = UiState.Error(respAddUser.toString())
-                }
-            }else {
-                uiState.value = UiState.Error(respAddUser.toString())
-            }
-        }else {
-            uiState.value = UiState.Error(respSignUp.toString())
-        }
-
-        // Запуск корутины
-/*        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                val result1 = accHelper.signUpWithEmailPassword(email, password, username)
-
-                if (result1 == Response.SUCCESS) {
-
-                    val result2 = accHelper.addUserToDatabase(email, username)
-
-                    if (result2 == Response.SUCCESS) {
-
-                        val result3 = accHelper.sendEmailVerification()
-
-                        if (result3 == Response.SUCCESS) {
-                            uiState.value = UiState.Success(Response.SUCCESS)
+                        if (respSendEmail == Response.SUCCESS) {
+                            uiState.value = UiState.Success(Response.SUCCESS.toString())
                         } else {
-                            // Обработка ошибки в третьем запросе
-                            uiState.value = UiState.Error(result3)
+                            uiState.value = UiState.Error(respAddUser.toString())
                         }
                     } else {
-                        // Обработка ошибки во втором запросе
-                        uiState.value = UiState.Error(result2)
+                        uiState.value = UiState.Error(respAddUser.toString())
                     }
                 } else {
-                    // Обработка ошибки в первом запросе
-                    uiState.value = UiState.Error(result1)
+                    uiState.value = UiState.Error(respSignUp.toString())
                 }
-            } catch (e: Exception) {
+
+            }
+            catch (e: Exception) {
                 throw Exception("Registration failed: ${e.message}")
             }
-        }*/
+        }
+        else {
+            uiState.value = UiState.Error(chackValue.toString())
+        }
+
+
 
     }
+
 }

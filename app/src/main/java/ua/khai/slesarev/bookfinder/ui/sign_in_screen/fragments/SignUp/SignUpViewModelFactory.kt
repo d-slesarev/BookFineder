@@ -11,8 +11,8 @@ import ua.khai.slesarev.bookfinder.ui.sign_in_screen.SingInActivity
 class SignUpViewModelFactory() :
     ViewModelProvider.Factory {
 
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+/*    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return SignUpViewModel() as T
-    }
+    }*/
 
 }
