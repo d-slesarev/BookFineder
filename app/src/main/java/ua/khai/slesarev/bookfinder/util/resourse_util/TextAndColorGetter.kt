@@ -1,6 +1,6 @@
 package ua.khai.slesarev.bookfinder.util.resourse_util
 
-val resourses: Map<String, List<String>> = mapOf(
+val resourses_for_sign_up: Map<String, List<String>> = mapOf(
     "ERROR_INVALID_EMAIL" to listOf("invalid_email", "not_checked", "not_checked", "RED", "BROWN", "BROWN"),
     "ERROR_EMAIL_ALREADY_IN_USE" to listOf("email_in_use", "not_checked", "not_checked", "RED", "BROWN", "BROWN"),
     "ERROR_INVALID_CREDENTIAL" to listOf("invalid_credential", "invalid_credential", "not_checked", "RED", "RED", "BROWN"),
@@ -17,6 +17,22 @@ val resourses: Map<String, List<String>> = mapOf(
     "SUCCESS" to listOf("correctly", "correctly", "correctly", "GREEN", "GREEN", "GREEN"),
 )
 
-fun getResourseMap(): Map<String, List<String>>{
-    return resourses
+val resourses_for_sign_in: Map<String, List<String>> = mapOf(
+    "ERROR_INVALID_EMAIL" to listOf("invalid_email", "not_checked", "RED", "BROWN"),
+    "ERROR_USER_NOT_FOUND" to listOf("user_not_found", "not_checked", "RED", "BROWN"),
+    "ERROR_INVALID_CREDENTIAL" to listOf("invalid_credential", "invalid_credential", "RED", "RED"),
+    "ERROR_MISSING_EMAIL" to listOf("required", "not_checked", "RED", "BROWN"),
+    "ERROR_MISSING_PASSWORD" to listOf("not_checked", "required", "BROWN", "RED"),
+    "ERROR_MISSING_EMAIL_AND_PASSWORD" to listOf("required", "required", "RED", "RED"),
+    "ERROR_UNKNOWN" to listOf("correctly", "correctly", "GREEN", "GREEN"),
+    "ERROR_UNCONFIRMED_EMAIL" to listOf("correctly", "correctly", "GREEN", "GREEN"),
+    "SUCCESS" to listOf("correctly", "correctly", "GREEN", "GREEN"),
+)
+
+fun getResoursesForSignUp(): Map<String, List<String>>{
+    return resourses_for_sign_up
+}
+
+fun getResoursesForSignIn(): Map<String, List<String>>{
+    return resourses_for_sign_up
 }

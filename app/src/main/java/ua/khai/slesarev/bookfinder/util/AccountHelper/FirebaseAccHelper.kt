@@ -1,35 +1,37 @@
 package ua.khai.slesarev.bookfinder.util.AccountHelper
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.auth
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
 import ua.khai.slesarev.bookfinder.data.model.User
-import ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SignUp.UiState
 import kotlin.coroutines.resume
 
 class FirebaseAccHelper() : AccountHelper {
 
     private val TAG = "FirebaseAuth"
+    private val URL_DATABASE = "https://book-finder-2b1d4-default-rtdb.europe-west1.firebasedatabase.app/"
     private var auth: FirebaseAuth = Firebase.auth
     private var database: FirebaseDatabase = FirebaseDatabase
-        .getInstance("https://book-finder-2b1d4-default-rtdb.europe-west1.firebasedatabase.app/")
+        .getInstance(URL_DATABASE)
 
-    fun emptyCheck(email: String, password: String, username: String): Response {
+    private var userName:String = ""
+        get() = userName
+    private var userEmail:String = ""
+        get() = userEmail
+
+    fun signUpEmptyCheck(email: String, password: String, username: String): Response {
 
         if (email.isEmpty() && password.isEmpty() && username.isEmpty()) {
             return Response.ERROR_MISSING_EMAIL_AND_PASSWORD_AND_NAME
         } else {
             if (email.isEmpty() && password.isEmpty()) {
                 return Response.ERROR_MISSING_EMAIL_AND_PASSWORD
-            } else {
+            }
+            else {
                 if (email.isEmpty() && username.isEmpty()) {
                     return Response.ERROR_MISSING_EMAIL_AND_NAME
                 } else {
@@ -55,17 +57,79 @@ class FirebaseAccHelper() : AccountHelper {
         }
     }
 
-    override suspend fun signUpWithEmailPassword(
-        email: String,
-        password: String,
-        username: String
-    ): Response {
+    fun signInEmptyCheck(email: String, password: String):Response {
+        return if (email.isEmpty() && password.isEmpty()) {
+            Response.ERROR_MISSING_EMAIL_AND_PASSWORD
+        }
+        else {
+            if (email.isNotEmpty()) {
+                return if (password.isNotEmpty()) {
+                    Response.SUCCESS
+                } else {
+                    Response.ERROR_MISSING_PASSWORD
+                }
+            } else {
+                return Response.ERROR_MISSING_EMAIL
+            }
+        }
+    }
+
+    override suspend fun signInWithEmailPassword(email: String,password: String): Response {
         return suspendCancellableCoroutine { continuation ->
-            Log.w(TAG, "createUserWithEmail: Started!")
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "Sing In: SUCCESS!")
+
+                        val user = auth.currentUser
+
+                        if (user != null && user.isEmailVerified){
+                            continuation.resume(Response.SUCCESS)
+                            userEmail = email
+                        } else {
+                            continuation.resume(Response.ERROR_UNCONFIRMED_EMAIL)
+                            auth.signOut()
+                        }
+
+                    } else {
+                        val exception = task.exception
+                        if (exception is FirebaseAuthException) {
+                            val errorCode = exception.errorCode
+                            when (errorCode) {
+                                "ERROR_INVALID_EMAIL" -> {
+                                    continuation.resume(Response.ERROR_INVALID_EMAIL)
+                                }
+
+                                "ERROR_USER_NOT_FOUND" -> {
+                                    continuation.resume(Response.ERROR_USER_NOT_FOUND)
+                                }
+
+                                "ERROR_INVALID_CREDENTIAL" -> {
+                                    continuation.resume(Response.ERROR_INVALID_CREDENTIAL)
+                                }
+
+                                else -> {
+                                    continuation.resume(Response.ERROR_UNKNOWN)
+                                }
+                            }
+                        } else {
+                            if (exception != null) {
+                                Log.d(TAG, "Sing In: " + exception.message)
+                            }
+                            continuation.resume(Response.ERROR_UNKNOWN)
+                        }
+                    }
+                }
+        }
+    }
+
+    override suspend fun signUpWithEmailPassword(email: String,password: String,username: String): Response {
+        return suspendCancellableCoroutine { continuation ->
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "createUserWithEmail: SUCCESS!")
+                        userName = username
                         continuation.resume(Response.SUCCESS)
                     } else {
                         val exception = task.exception
@@ -100,9 +164,7 @@ class FirebaseAccHelper() : AccountHelper {
                         }
                     }
                 }
-            Log.w(TAG, "createUserWithEmail: Finished!")
         }
-
     }
 
     suspend fun sendEmailVerification(): Response {
@@ -115,6 +177,7 @@ class FirebaseAccHelper() : AccountHelper {
                     user.sendEmailVerification()
                         .addOnSuccessListener {
                             continuation.resume(Response.SUCCESS)
+                            auth.signOut()
                             Log.d(TAG, "sendEmailVerification: SUCCESS!")
                         }
                         .addOnFailureListener { exception ->
@@ -140,6 +203,9 @@ class FirebaseAccHelper() : AccountHelper {
                         .getReference(uid)
 
                     val newUser = User(uid, username, email)
+
+                    databaseReference.child(uid).child("username")
+
                     databaseReference.setValue(newUser)
                         .addOnSuccessListener {
                             continuation.resume(Response.SUCCESS)
@@ -158,10 +224,8 @@ class FirebaseAccHelper() : AccountHelper {
     }
 
     suspend fun rollBackAddUser(): Response {
-        var result: Response = Response.DEFAULT
-        val uid = auth.currentUser?.uid
-
-        return withContext(Dispatchers.IO) {
+        return suspendCancellableCoroutine { continuation ->
+            val uid = auth.currentUser?.uid
             if (uid != null) {
                 try {
                     val databaseReference = database
@@ -169,11 +233,11 @@ class FirebaseAccHelper() : AccountHelper {
 
                     databaseReference.removeValue()
                         .addOnSuccessListener {
-                            result = Response.SUCCESS
+                            continuation.resume(Response.SUCCESS)
                             Log.d(TAG, "rollBackAddUser: SUCCESS")
                         }
                         .addOnFailureListener { exception ->
-                            result = Response.ERROR_UNKNOWN
+                            continuation.resume(Response.ERROR_UNKNOWN)
                             Log.d(TAG, "rollBackAddUser: " + exception.message)
                         }
                 } catch (e: Exception) {
@@ -181,35 +245,28 @@ class FirebaseAccHelper() : AccountHelper {
                 }
             }
 
-            return@withContext result
         }
-
     }
 
     suspend fun rollBackRegister(): Response {
-        var result: Response = Response.DEFAULT
-        val user = auth.currentUser
-
-        return withContext(Dispatchers.IO) {
+        return suspendCancellableCoroutine { continuation ->
+            val user = auth.currentUser
             if (user != null) {
                 try {
                     user.delete()
                         .addOnSuccessListener {
-                            result = Response.SUCCESS
+                            continuation.resume(Response.SUCCESS)
                             Log.d(TAG, "rollBackRegister: SUCCESS!")
                         }
                         .addOnFailureListener { exception ->
-                            result = Response.ERROR_UNKNOWN
+                            continuation.resume(Response.ERROR_UNKNOWN)
                             Log.d(TAG, "rollBackRegister: " + exception.message)
                         }
                 } catch (e: Exception) {
                     Log.d(TAG, "Exception: " + e.message)
                 }
             }
-
-            return@withContext result
         }
-
     }
 }
 

@@ -10,8 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -23,25 +21,24 @@ import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.databinding.FragSingUpBinding
 import ua.khai.slesarev.bookfinder.ui.sign_in_screen.SingInActivity
 import ua.khai.slesarev.bookfinder.util.AccountHelper.Response
-import ua.khai.slesarev.bookfinder.util.resourse_util.getResourseMap
+import ua.khai.slesarev.bookfinder.util.resourse_util.getResoursesForSignUp
 
 class SingUp : Fragment() {
 
     private val binding by lazy { FragSingUpBinding.inflate(layoutInflater) }
     private val viewModel: SignUpViewModel by viewModels()
     private lateinit var act: SingInActivity
-    private val resorMap: Map<String, List<String>> = getResourseMap()
+    private val resorMap: Map<String, List<String>> = getResoursesForSignUp()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        act = (activity as SingInActivity)
 
+        act = (activity as SingInActivity)
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -86,14 +83,9 @@ class SingUp : Fragment() {
     }
 
     private fun onLoad() = with(binding) {
-        progressBar.visibility = View.VISIBLE
+        signUpProgrBar.visibility = View.VISIBLE
         createAccountBtn.isEnabled = false
         logInBtn.isEnabled = false
-    }
-
-    fun onBackPressed() {
-        // Перехватываем событие нажатия кнопки "Назад"
-        // В данном случае, ничего не делаем, чтобы предотвратить стандартное поведение
     }
 
     fun getStringResourceByName(context: Context, resourceName: String): String? {
@@ -151,7 +143,7 @@ class SingUp : Fragment() {
 
     private fun updateRender(response:String) = with(binding){
 
-        progressBar.visibility = View.GONE
+        signUpProgrBar.visibility = View.GONE
         createAccountBtn.isEnabled = true
         logInBtn.isEnabled = true
 

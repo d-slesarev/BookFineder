@@ -46,7 +46,7 @@ tools:context=".ui.sign_in_screen.fragments.SingIn.SingIn">
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.5"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/SingUpBtn"
+    app:layout_constraintTop_toBottomOf="@+id/singUpBtn"
     app:layout_constraintVertical_bias="0.0">
 
     <View
@@ -79,7 +79,7 @@ tools:context=".ui.sign_in_screen.fragments.SingIn.SingIn">
 
 <Button
     style="@style/OutlinedButton"
-    android:id="@+id/SingUpBtn"
+    android:id="@+id/singUpBtn"
     android:layout_width="0dp"
     android:layout_height="48dp"
     android:layout_marginStart="18dp"
@@ -216,6 +216,21 @@ tools:context=".ui.sign_in_screen.fragments.SingIn.SingIn">
             android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <ProgressBar
+        android:id="@+id/signInProgrBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="32dp"
+        android:foregroundGravity="center_vertical|center_horizontal"
+        android:theme="@style/Widget.Material3.CircularProgressIndicator.Medium"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.53" />
+
 <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/passTextInputLayout"
     style="@style/RoundedTextInputLayout"
@@ -252,6 +267,8 @@ tools:context=".ui.sign_in_screen.fragments.SingIn.SingIn">
         android:hint="Password"
         android:inputType="text|textPassword"
         android:textSize="16sp" />
+
+
 
 
 </com.google.android.material.textfield.TextInputLayout>

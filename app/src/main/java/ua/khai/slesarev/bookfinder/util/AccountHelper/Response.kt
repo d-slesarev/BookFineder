@@ -16,7 +16,7 @@ enum class Response {
     ERROR_MISSING_EMAIL_AND_NAME,
     // ВОЗМОЖНЫЕ КОДЫ ОШИБОК ПРИ ВХОДЕ
     ERROR_USER_NOT_FOUND, // Пользователь не найден
-    ERROR_EXPIRED_ACTION_CODE, // Код действия (например, подтверждение адреса электронной почты) истек.
+    ERROR_UNCONFIRMED_EMAIL, // Код действия (например, подтверждение адреса электронной почты) истек.
     // ДРУГИЕ ОШИБКИ
     ERROR_UNKNOWN,
     SERVER_ERROR,
