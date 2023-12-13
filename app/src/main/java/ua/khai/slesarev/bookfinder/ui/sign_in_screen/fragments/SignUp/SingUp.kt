@@ -2,7 +2,6 @@ package ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SignUp
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -20,8 +19,9 @@ import kotlinx.coroutines.launch
 import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.databinding.FragSingUpBinding
 import ua.khai.slesarev.bookfinder.ui.sign_in_screen.SingInActivity
-import ua.khai.slesarev.bookfinder.util.AccountHelper.Response
-import ua.khai.slesarev.bookfinder.util.resourse_util.getResoursesForSignUp
+import ua.khai.slesarev.bookfinder.data.util.Event
+import ua.khai.slesarev.bookfinder.ui.util.UiState
+import ua.khai.slesarev.bookfinder.ui.util.resourse_util.getResoursesForSignUp
 
 class SingUp : Fragment() {
 
@@ -47,7 +47,7 @@ class SingUp : Fragment() {
         }
 
         binding.createAccountBtn.setOnClickListener {
-            lateinit var result: Response
+            lateinit var result: Event
             var userName = binding.nameTexInp.text.toString()
             var email = binding.emailRegisterTexInp.text.toString()
             var password = binding.passRegisterTexImp.text.toString()
@@ -149,51 +149,51 @@ class SingUp : Fragment() {
 
         when (response) {
 
-            Response.ERROR_INVALID_EMAIL.toString() -> {
+            Event.ERROR_INVALID_EMAIL.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_EMAIL_ALREADY_IN_USE.toString() -> {
+            Event.ERROR_EMAIL_ALREADY_IN_USE.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_INVALID_CREDENTIAL.toString() -> {
+            Event.ERROR_INVALID_CREDENTIAL.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_WEAK_PASSWORD.toString() -> {
+            Event.ERROR_WEAK_PASSWORD.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_MISSING_NAME.toString() -> {
+            Event.ERROR_MISSING_NAME.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_MISSING_EMAIL.toString() -> {
+            Event.ERROR_MISSING_EMAIL.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_MISSING_PASSWORD.toString() -> {
+            Event.ERROR_MISSING_PASSWORD.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_MISSING_EMAIL_AND_PASSWORD.toString() -> {
+            Event.ERROR_MISSING_EMAIL_AND_PASSWORD.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_MISSING_EMAIL_AND_NAME.toString() -> {
+            Event.ERROR_MISSING_EMAIL_AND_NAME.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_MISSING_NAME_AND_PASSWORD.toString() -> {
+            Event.ERROR_MISSING_NAME_AND_PASSWORD.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_MISSING_EMAIL_AND_PASSWORD_AND_NAME.toString() -> {
+            Event.ERROR_MISSING_EMAIL_AND_PASSWORD_AND_NAME.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_UNKNOWN.toString() -> {
+            Event.ERROR_UNKNOWN.toString() -> {
 
                 setResourses(response)
 
@@ -210,7 +210,7 @@ class SingUp : Fragment() {
                 alertDialog.show()
             }
 
-            Response.SERVER_ERROR.toString() -> {
+            Event.SERVER_ERROR.toString() -> {
 
                 setResourses(response)
 
@@ -227,7 +227,7 @@ class SingUp : Fragment() {
                 alertDialog.show()
             }
 
-            Response.SUCCESS.toString() -> {
+            Event.SUCCESS.toString() -> {
 
                 setResourses(response)
 

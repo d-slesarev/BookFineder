@@ -18,9 +18,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ua.khai.slesarev.bookfinder.ui.home_screen.HomeActivity
 import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.databinding.FragSingInBinding
-import ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SignUp.UiState
-import ua.khai.slesarev.bookfinder.util.AccountHelper.Response
-import ua.khai.slesarev.bookfinder.util.resourse_util.getResoursesForSignIn
+import ua.khai.slesarev.bookfinder.ui.util.UiState
+import ua.khai.slesarev.bookfinder.data.util.Event
+import ua.khai.slesarev.bookfinder.ui.util.resourse_util.getResoursesForSignIn
 
 class SingIn : Fragment() {
 
@@ -116,32 +116,32 @@ class SingIn : Fragment() {
 
         when (response) {
 
-            Response.ERROR_INVALID_EMAIL.toString() -> {
+            Event.ERROR_INVALID_EMAIL.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_INVALID_CREDENTIAL.toString() -> {
+            Event.ERROR_INVALID_CREDENTIAL.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_MISSING_EMAIL.toString() -> {
+            Event.ERROR_MISSING_EMAIL.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_USER_NOT_FOUND.toString() -> {
+            Event.ERROR_USER_NOT_FOUND.toString() -> {
                 setResourses(response)
             }
 
 
-            Response.ERROR_MISSING_PASSWORD.toString() -> {
+            Event.ERROR_MISSING_PASSWORD.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_MISSING_EMAIL_AND_PASSWORD.toString() -> {
+            Event.ERROR_MISSING_EMAIL_AND_PASSWORD.toString() -> {
                 setResourses(response)
             }
 
-            Response.ERROR_UNCONFIRMED_EMAIL.toString() -> {
+            Event.ERROR_UNCONFIRMED_EMAIL.toString() -> {
                 setResourses(response)
 
                 val alertDialog =
@@ -157,7 +157,7 @@ class SingIn : Fragment() {
                 alertDialog.show()
             }
 
-            Response.ERROR_UNKNOWN.toString() -> {
+            Event.ERROR_UNKNOWN.toString() -> {
 
                 setResourses(response)
 
@@ -174,7 +174,7 @@ class SingIn : Fragment() {
                 alertDialog.show()
             }
 
-            Response.SUCCESS.toString() -> {
+            Event.SUCCESS.toString() -> {
 
                 setResourses(response)
 

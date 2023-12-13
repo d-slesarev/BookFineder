@@ -1,7 +1,15 @@
 package ua.khai.slesarev.bookfinder.data.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "users")
 data class User(
-    val userId: String = "",
-    val username: String = "",
-    val email: String = ""
+    @PrimaryKey(autoGenerate = true)
+    val uid:Int,
+    @ColumnInfo(name = "user_name")
+    val username: String,
+    @ColumnInfo(name = "email")
+    val email: String
 )

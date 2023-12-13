@@ -1,4 +1,4 @@
-package ua.khai.slesarev.bookfinder.util.resourse_util
+package ua.khai.slesarev.bookfinder.ui.util.resourse_util
 
 val resourses_for_sign_up: Map<String, List<String>> = mapOf(
     "ERROR_INVALID_EMAIL" to listOf("invalid_email", "not_checked", "not_checked", "RED", "BROWN", "BROWN"),

@@ -1,6 +1,6 @@
-package ua.khai.slesarev.bookfinder.util.AccountHelper
+package ua.khai.slesarev.bookfinder.data.util
 
-enum class Response {
+enum class Event {
     // ВОЗМОЖНЫЕ КОДЫ ОШИБОК ПРИ РЕГИСТРАЦИИ
     // Ошибки которые выводим в текст
     ERROR_EMAIL_ALREADY_IN_USE, // Указанный адрес электронной почты уже используется другим пользователем.

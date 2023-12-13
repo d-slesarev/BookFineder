@@ -1,6 +1,4 @@
-package ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SignUp
-
-import ua.khai.slesarev.bookfinder.util.AccountHelper.Response
+package ua.khai.slesarev.bookfinder.ui.util
 
 sealed class UiState {
     object Loading : UiState()
