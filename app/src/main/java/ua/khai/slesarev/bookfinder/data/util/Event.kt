@@ -21,8 +21,17 @@ enum class Event {
     ERROR_UNKNOWN,
     SERVER_ERROR,
     NETWORK_ERROR,
+    FAILURE,
     // ЕСЛИ ВСЁ ХОРОШО
-    // Выводим в диалоге
     SUCCESS,
     DEFAULT
 }
+
+/*
+* Log.d(TAG, "UserRepository.addUser: SUCCESS!")
+*
+* Log.d(TAG, "UserRepository.addUser: FAILURE!")
+*
+* Log.d(TAG, "UserRepository.addUser-Exception: ${e.message.toString()}")
+*
+* */

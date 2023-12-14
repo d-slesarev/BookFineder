@@ -8,7 +8,7 @@ interface AuthRepository {
 
     suspend fun signUpWithEmailPassword(email:String, password:String, username: String): Response<Event>
     suspend fun signInWithEmailPassword(email:String, password:String): Response<Event>
-    fun signOut(): UiState
+    fun signOut(): Response<Event>
     suspend fun resetPassword(email: String): Response<Event>
     suspend fun signInWithGoogle(): Response<Event>
 }

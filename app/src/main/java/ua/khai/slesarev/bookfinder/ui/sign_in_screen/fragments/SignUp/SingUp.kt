@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.databinding.FragSingUpBinding
@@ -52,7 +53,7 @@ class SingUp : Fragment() {
             var email = binding.emailRegisterTexInp.text.toString()
             var password = binding.passRegisterTexImp.text.toString()
 
-            lifecycleScope.launch {
+            lifecycleScope.launch(Dispatchers.Main) {
                 viewModel.signUpWithEmailPassword(email, password, userName)
             }
 

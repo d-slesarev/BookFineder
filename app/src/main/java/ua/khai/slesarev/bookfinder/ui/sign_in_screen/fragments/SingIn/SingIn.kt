@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -13,20 +14,26 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ua.khai.slesarev.bookfinder.ui.home_screen.HomeActivity
 import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.databinding.FragSingInBinding
 import ua.khai.slesarev.bookfinder.ui.util.UiState
 import ua.khai.slesarev.bookfinder.data.util.Event
+import ua.khai.slesarev.bookfinder.data.util.TAG
 import ua.khai.slesarev.bookfinder.ui.util.resourse_util.getResoursesForSignIn
+import kotlin.properties.Delegates
 
 class SingIn : Fragment() {
 
     private val binding by lazy { FragSingInBinding.inflate(layoutInflater) }
     private val viewModel: SignInViewModel by viewModels()
     private val resorMap: Map<String, List<String>> = getResoursesForSignIn()
+    private var rememberState by Delegates.notNull<Boolean>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,8 +60,12 @@ class SingIn : Fragment() {
         }
 
         binding.singInBtn.setOnClickListener {
-            val intent = Intent(requireContext(), HomeActivity::class.java)
-            startActivity(intent)
+            var password = binding.passSignTexInp.text.toString()
+            var email = binding.emailTexInp.text.toString()
+
+            lifecycleScope.launch(Dispatchers.Main) {
+                viewModel.signInWithEmailPassword(email, password)
+            }
         }
 
         binding.forgotBtn.setOnClickListener {
@@ -178,18 +189,22 @@ class SingIn : Fragment() {
 
                 setResourses(response)
 
-                val alertDialog =
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(context?.getString(R.string.confirm))
-                        .setMessage(context?.getString(R.string.confirm_message))
-                        .setPositiveButton("OK") { dialog, which ->
-                            dialog.dismiss()
-                            findNavController().navigate(R.id.action_singUp_to_singIn)
-                        }
-                        .setCancelable(false)
-                        .create()
+                val bundle = Bundle().apply {
 
-                alertDialog.show()
+                    Log.d(TAG, "userName: ${viewModel.userName}")
+                    Log.d(TAG, "userEmail: ${viewModel.userEmail}")
+
+                    putString("userName", viewModel.userName)
+                    putString("userEmail", viewModel.userEmail)
+                }
+
+                lifecycleScope.launch {
+                    rememberState = binding.rememberCheck.isChecked
+                    viewModel.updateRememberState(rememberState)
+                    findNavController().navigate(R.id.action_singIn_to_homeActivity, bundle)
+                    requireActivity().finish()
+                }
+
             }
 
             else -> {}
@@ -225,10 +240,8 @@ class SingIn : Fragment() {
         val resorIdList = resorMap.get(response)
 
         if (resorIdList != null) {
-            emailTextInputLayout.helperText = getStringResourceByName(requireContext(), resorIdList.get(0))
-            passTextInputLayout.helperText = getStringResourceByName(requireContext(), resorIdList.get(1))
 
-            emailTextInputLayout.setHelperTextColor(getColorResourceByName(requireContext(), resorIdList.get(2))?.let {
+            emailSignInTextInputLayout.setHelperTextColor(getColorResourceByName(requireContext(), resorIdList.get(2))?.let {
                 ColorStateList.valueOf(
                     it
                 )
@@ -240,17 +253,8 @@ class SingIn : Fragment() {
                 )
             })
 
+            emailSignInTextInputLayout.helperText = getStringResourceByName(requireContext(), resorIdList.get(0))
+            passTextInputLayout.helperText = getStringResourceByName(requireContext(), resorIdList.get(1))
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 }

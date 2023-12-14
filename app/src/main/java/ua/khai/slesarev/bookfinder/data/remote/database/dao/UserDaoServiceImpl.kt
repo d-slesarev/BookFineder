@@ -13,87 +13,100 @@ import ua.khai.slesarev.bookfinder.data.model.UserRemote
 import ua.khai.slesarev.bookfinder.data.remote.database.service.UserDaoService
 import ua.khai.slesarev.bookfinder.data.util.Event
 import ua.khai.slesarev.bookfinder.data.util.Response
+import ua.khai.slesarev.bookfinder.data.util.TAG
 import ua.khai.slesarev.bookfinder.data.util.URL_DATABASE
 import kotlin.coroutines.resume
 
 class UserDaoServiceImpl : UserDaoService {
 
-    private val TAG = "FirebaseRealtime"
     private var auth: FirebaseAuth = Firebase.auth
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance(URL_DATABASE)
     override suspend fun saveUser(user: UserRemote): Event {
         return suspendCancellableCoroutine { continuation ->
-        val uid = auth.currentUser?.uid
-
-        if (uid != null) {
-            try {
-                val databaseReference = database
-                    .getReference(uid)
-
-                databaseReference.setValue(user)
-                    .addOnSuccessListener {
-                        continuation.resume(Event.SUCCESS)
-                        Log.d(TAG, "addUserToDatabase: SUCCESS!")
-                    }
-                    .addOnFailureListener { exception ->
-                        continuation.resume(Event.ERROR_UNKNOWN)
-                        Log.d(TAG, "addUserToDatabase: " + exception.message)
-                    }
-            } catch (e: Exception) {
-                Log.d(TAG, "Exception: " + e.message)
-            }
-        }
-    }
-
-    }
-    override suspend fun loadUserByID(uid: String): Response<UserRemote> {
-        return suspendCancellableCoroutine { continuation ->
-
-            var userEmail = ""
-            var userName = ""
+            val uid = auth.currentUser?.uid
 
             if (uid != null) {
                 try {
-                    val databaseReference = database.getReference(uid)
-                    val usernameRef = databaseReference.child(uid).child("username")
-                    val emailRef = databaseReference.child(uid).child("email")
+                    val databaseReference = database
+                        .getReference(uid)
 
-                    usernameRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            val name = snapshot.value as String?
-                            if (name != null) {
-                                userName = name
-                            }
+                    databaseReference.setValue(user)
+                        .addOnSuccessListener {
+                            continuation.resume(Event.SUCCESS)
+                            Log.d(TAG, "UserDaoServ.saveUser: SUCCESS!")
                         }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            continuation.resume(Response.Error(error.message))
-                            Log.d(TAG, "LoadUserError: ${error.message}")
+                        .addOnFailureListener { exception ->
+                            continuation.resume(Event.ERROR_UNKNOWN)
+                            Log.d(
+                                TAG,
+                                "UserDaoServ.saveUser: FAILURE!\nMessage: ${exception.message}"
+                            )
                         }
-                    })
-
-                    emailRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            val email = snapshot.value as String?
-                            if (email != null) {
-                                userEmail = email
-                                continuation.resume(Response.Success(UserRemote(userName, userEmail)))
-                            }
-
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            continuation.resume(Response.Error(error.message))
-                            Log.d(TAG, "LoadUserError: ${error.message}")
-                        }
-                    })
-
                 } catch (e: Exception) {
-                    Log.d(TAG, "LoadUserException: " + e.message)
+                    Log.d(TAG, "UserDaoServ.saveUser-Exception: ${e.message}")
                 }
             }
         }
+
     }
+
+    override suspend fun loadUserByID(uid: String): Response<UserRemote> {
+
+        val databaseReference = database.getReference(uid)
+
+        var userEmail:String = suspendCancellableCoroutine { continuation ->
+            try {
+                val emailRef = databaseReference.child("email")
+
+                emailRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val email = snapshot.value as String?
+                        if (email != null) {
+                            continuation.resume(email)
+                            Log.d(TAG, "UserDaoServ.loadUserByID: SUCCESS!")
+                        }
+
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        continuation.resume("")
+                        Log.d(TAG, "UserDaoServ.loadUserByID: FAILURE!\nMessage: ${error.message}")
+                    }
+                })
+            } catch (e: Exception) {
+                Log.d(TAG, "UserDaoServ.loadUserByID-Exception: ${e.message}")
+            }
+        }
+
+        var userName:String = suspendCancellableCoroutine { continuation ->
+            try {
+                val usernameRef = databaseReference.child("username")
+
+                usernameRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val name = snapshot.value as String?
+                        if (name != null) {
+                            continuation.resume(name)
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        continuation.resume("")
+                        Log.d(TAG, "UserDaoServ.loadUserByID: FAILURE!\nMessage: ${error.message}")
+                    }
+                })
+            } catch (e: Exception) {
+                Log.d(TAG, "UserDaoServ.loadUserByID-Exception: ${e.message}")
+            }
+        }
+
+        if (userEmail.isNotEmpty() && userName.isNotEmpty()){
+            return Response.Success(UserRemote(userName, userEmail))
+        } else {
+            return Response.Error(Event.FAILURE.toString())
+        }
+    }
+
     override suspend fun updateUser(user: UserRemote): Event {
         return suspendCancellableCoroutine { continuation ->
             val uid = auth.currentUser?.uid
@@ -106,21 +119,24 @@ class UserDaoServiceImpl : UserDaoService {
                     databaseReference.setValue(user)
                         .addOnSuccessListener {
                             continuation.resume(Event.SUCCESS)
-                            Log.d(TAG, "addUserToDatabase: SUCCESS!")
+                            Log.d(TAG, "UserDaoServ.updateUser: SUCCESS!")
                         }
                         .addOnFailureListener { exception ->
                             continuation.resume(Event.ERROR_UNKNOWN)
-                            Log.d(TAG, "addUserToDatabase: " + exception.message)
+                            Log.d(
+                                TAG,
+                                "UserDaoServ.updateUser: FAILURE!\nMessage: ${exception.message}"
+                            )
                         }
                 } catch (e: Exception) {
-                    Log.d(TAG, "Exception: " + e.message)
+                    Log.d(TAG, "UserDaoServ.updateUser-Exception: ${e.message}")
                 }
             }
         }
     }
-    override suspend fun deleteUser(user: UserRemote): Event {
+
+    override suspend fun deleteUserByID(uid: String): Event {
         return suspendCancellableCoroutine { continuation ->
-            val uid = auth.currentUser?.uid
             if (uid != null) {
                 try {
                     val databaseReference = database
@@ -129,14 +145,17 @@ class UserDaoServiceImpl : UserDaoService {
                     databaseReference.removeValue()
                         .addOnSuccessListener {
                             continuation.resume(Event.SUCCESS)
-                            Log.d(TAG, "rollBackAddUser: SUCCESS")
+                            Log.d(TAG, "UserDaoServ.deleteUserByID: SUCCESS!")
                         }
                         .addOnFailureListener { exception ->
                             continuation.resume(Event.ERROR_UNKNOWN)
-                            Log.d(TAG, "rollBackAddUser: " + exception.message)
+                            Log.d(
+                                TAG,
+                                "UserDaoServ.deleteUserByID: FAILURE!\nMessage: ${exception.message}"
+                            )
                         }
                 } catch (e: Exception) {
-                    Log.d(TAG, "Exception: " + e.message)
+                    Log.d(TAG, "UserDaoServ.deleteUserByID-Exception: ${e.message}")
                 }
             }
         }

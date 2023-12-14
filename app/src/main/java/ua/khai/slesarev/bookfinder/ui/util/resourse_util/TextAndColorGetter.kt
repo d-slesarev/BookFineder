@@ -34,5 +34,5 @@ fun getResoursesForSignUp(): Map<String, List<String>>{
 }
 
 fun getResoursesForSignIn(): Map<String, List<String>>{
-    return resourses_for_sign_up
+    return resourses_for_sign_in
 }

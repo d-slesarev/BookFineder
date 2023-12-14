@@ -9,7 +9,7 @@ import ua.khai.slesarev.bookfinder.data.model.User
 import ua.khai.slesarev.bookfinder.data.util.DATABASE_NAME
 
 
-@Database(entities = [User::class], version = 1, exportSchema = false)
+@Database(entities = [User::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase(){
     abstract fun userDao(): UserDao
 
@@ -27,6 +27,7 @@ abstract class AppDatabase : RoomDatabase(){
 
         private fun buildDatabase(context: Context): AppDatabase {
             return Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }

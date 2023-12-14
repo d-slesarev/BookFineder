@@ -9,7 +9,7 @@ interface UserDaoService {
     suspend fun saveUser(user: UserRemote): Event
     suspend fun loadUserByID(uid: String): Response<UserRemote>
     suspend fun updateUser(user: UserRemote): Event
-    suspend fun deleteUser(user: UserRemote): Event
+    suspend fun deleteUserByID(uid: String): Event
 
 
 
