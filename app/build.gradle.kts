@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
+
 
 plugins {
     id("com.android.application")
@@ -63,6 +63,7 @@ dependencies {
 
 
     implementation("com.google.firebase:firebase-auth:22.3.0")
+    implementation("com.google.android.gms:play-services-auth:19.0.0")
     implementation("com.google.firebase:firebase-database:20.3.0")
 
     kapt("androidx.room:room-compiler:$room_version")

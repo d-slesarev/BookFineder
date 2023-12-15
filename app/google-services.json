@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "292942742398",
+    "firebase_url": "https://book-finder-2b1d4-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "book-finder-2b1d4",
     "storage_bucket": "book-finder-2b1d4.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "ua.khai.slesarev.bookfinder"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "292942742398-l5the5mgslvtqi7vquig0v05300k905g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ua.khai.slesarev.bookfinder",
+            "certificate_hash": "d7c3525da2ac640b406d4f64b4bc44f9bcc08251"
+          }
+        },
+        {
+          "client_id": "292942742398-kfupb9avj04gbscgoiombl9ekpb7hru7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAnaVw7WeDc4_keRzsSoEJkD7hE616BbWQ"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "292942742398-kfupb9avj04gbscgoiombl9ekpb7hru7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

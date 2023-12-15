@@ -13,7 +13,7 @@ import ua.khai.slesarev.bookfinder.data.model.UserRemote
 import ua.khai.slesarev.bookfinder.data.remote.database.service.UserDaoService
 import ua.khai.slesarev.bookfinder.data.util.Event
 import ua.khai.slesarev.bookfinder.data.util.Response
-import ua.khai.slesarev.bookfinder.data.util.TAG
+import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import ua.khai.slesarev.bookfinder.data.util.URL_DATABASE
 import kotlin.coroutines.resume
 
@@ -33,17 +33,17 @@ class UserDaoServiceImpl : UserDaoService {
                     databaseReference.setValue(user)
                         .addOnSuccessListener {
                             continuation.resume(Event.SUCCESS)
-                            Log.d(TAG, "UserDaoServ.saveUser: SUCCESS!")
+                            Log.d(MY_TAG, "UserDaoServ.saveUser: SUCCESS!")
                         }
                         .addOnFailureListener { exception ->
                             continuation.resume(Event.ERROR_UNKNOWN)
                             Log.d(
-                                TAG,
+                                MY_TAG,
                                 "UserDaoServ.saveUser: FAILURE!\nMessage: ${exception.message}"
                             )
                         }
                 } catch (e: Exception) {
-                    Log.d(TAG, "UserDaoServ.saveUser-Exception: ${e.message}")
+                    Log.d(MY_TAG, "UserDaoServ.saveUser-Exception: ${e.message}")
                 }
             }
         }
@@ -63,18 +63,18 @@ class UserDaoServiceImpl : UserDaoService {
                         val email = snapshot.value as String?
                         if (email != null) {
                             continuation.resume(email)
-                            Log.d(TAG, "UserDaoServ.loadUserByID: SUCCESS!")
+                            Log.d(MY_TAG, "UserDaoServ.loadUserByID: SUCCESS!")
                         }
 
                     }
 
                     override fun onCancelled(error: DatabaseError) {
                         continuation.resume("")
-                        Log.d(TAG, "UserDaoServ.loadUserByID: FAILURE!\nMessage: ${error.message}")
+                        Log.d(MY_TAG, "UserDaoServ.loadUserByID: FAILURE!\nMessage: ${error.message}")
                     }
                 })
             } catch (e: Exception) {
-                Log.d(TAG, "UserDaoServ.loadUserByID-Exception: ${e.message}")
+                Log.d(MY_TAG, "UserDaoServ.loadUserByID-Exception: ${e.message}")
             }
         }
 
@@ -92,11 +92,11 @@ class UserDaoServiceImpl : UserDaoService {
 
                     override fun onCancelled(error: DatabaseError) {
                         continuation.resume("")
-                        Log.d(TAG, "UserDaoServ.loadUserByID: FAILURE!\nMessage: ${error.message}")
+                        Log.d(MY_TAG, "UserDaoServ.loadUserByID: FAILURE!\nMessage: ${error.message}")
                     }
                 })
             } catch (e: Exception) {
-                Log.d(TAG, "UserDaoServ.loadUserByID-Exception: ${e.message}")
+                Log.d(MY_TAG, "UserDaoServ.loadUserByID-Exception: ${e.message}")
             }
         }
 
@@ -119,17 +119,17 @@ class UserDaoServiceImpl : UserDaoService {
                     databaseReference.setValue(user)
                         .addOnSuccessListener {
                             continuation.resume(Event.SUCCESS)
-                            Log.d(TAG, "UserDaoServ.updateUser: SUCCESS!")
+                            Log.d(MY_TAG, "UserDaoServ.updateUser: SUCCESS!")
                         }
                         .addOnFailureListener { exception ->
                             continuation.resume(Event.ERROR_UNKNOWN)
                             Log.d(
-                                TAG,
+                                MY_TAG,
                                 "UserDaoServ.updateUser: FAILURE!\nMessage: ${exception.message}"
                             )
                         }
                 } catch (e: Exception) {
-                    Log.d(TAG, "UserDaoServ.updateUser-Exception: ${e.message}")
+                    Log.d(MY_TAG, "UserDaoServ.updateUser-Exception: ${e.message}")
                 }
             }
         }
@@ -145,17 +145,17 @@ class UserDaoServiceImpl : UserDaoService {
                     databaseReference.removeValue()
                         .addOnSuccessListener {
                             continuation.resume(Event.SUCCESS)
-                            Log.d(TAG, "UserDaoServ.deleteUserByID: SUCCESS!")
+                            Log.d(MY_TAG, "UserDaoServ.deleteUserByID: SUCCESS!")
                         }
                         .addOnFailureListener { exception ->
                             continuation.resume(Event.ERROR_UNKNOWN)
                             Log.d(
-                                TAG,
+                                MY_TAG,
                                 "UserDaoServ.deleteUserByID: FAILURE!\nMessage: ${exception.message}"
                             )
                         }
                 } catch (e: Exception) {
-                    Log.d(TAG, "UserDaoServ.deleteUserByID-Exception: ${e.message}")
+                    Log.d(MY_TAG, "UserDaoServ.deleteUserByID-Exception: ${e.message}")
                 }
             }
         }

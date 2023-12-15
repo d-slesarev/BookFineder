@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">292942742398-kfupb9avj04gbscgoiombl9ekpb7hru7.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://book-finder-2b1d4-default-rtdb.europe-west1.firebasedatabase.app</string>
+    <string name="gcm_defaultSenderId" translatable="false">292942742398</string>
+    <string name="google_api_key" translatable="false">AIzaSyAnaVw7WeDc4_keRzsSoEJkD7hE616BbWQ</string>
+    <string name="google_app_id" translatable="false">1:292942742398:android:0b22fea42b35fd8665692f</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAnaVw7WeDc4_keRzsSoEJkD7hE616BbWQ</string>
+    <string name="google_storage_bucket" translatable="false">book-finder-2b1d4.appspot.com</string>
+    <string name="project_id" translatable="false">book-finder-2b1d4</string>
+</resources>

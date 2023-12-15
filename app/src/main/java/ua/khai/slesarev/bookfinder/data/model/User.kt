@@ -10,8 +10,6 @@ data class User(
     var uid:String = "",
     @ColumnInfo(name = "user_name")
     var username: String,
-    @ColumnInfo(name = "remember_state")
-    var remember:Boolean,
     @ColumnInfo(name = "email")
     var email: String
 )

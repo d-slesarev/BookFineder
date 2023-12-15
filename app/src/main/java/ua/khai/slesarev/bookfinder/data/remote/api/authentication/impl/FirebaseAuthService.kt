@@ -8,7 +8,7 @@ import com.google.firebase.auth.auth
 import kotlinx.coroutines.suspendCancellableCoroutine
 import ua.khai.slesarev.bookfinder.data.remote.api.authentication.AuthService
 import ua.khai.slesarev.bookfinder.data.util.Event
-import ua.khai.slesarev.bookfinder.data.util.TAG
+import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import kotlin.coroutines.resume
 
 class FirebaseAuthService : AuthService {
@@ -24,10 +24,10 @@ class FirebaseAuthService : AuthService {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Log.d(TAG, "FirebaseAuthServ.signUp: SUCCESS!")
+                        Log.d(MY_TAG, "FirebaseAuthServ.signUp: SUCCESS!")
                         continuation.resume(Event.SUCCESS)
                     } else {
-                        Log.d(TAG, "FirebaseAuthServ.signUp: FAILURE!")
+                        Log.d(MY_TAG, "FirebaseAuthServ.signUp: FAILURE!")
                         val exception = task.exception
                         if (exception is FirebaseAuthException) {
                             val errorCode = exception.errorCode
@@ -54,7 +54,7 @@ class FirebaseAuthService : AuthService {
                             }
                         } else {
                             if (exception != null) {
-                                Log.d(TAG, "FirebaseAuthServ.signUp-Exception: " + exception.message)
+                                Log.d(MY_TAG, "FirebaseAuthServ.signUp-Exception: " + exception.message)
                             }
                             continuation.resume(Event.ERROR_UNKNOWN)
                         }
@@ -68,7 +68,7 @@ class FirebaseAuthService : AuthService {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Log.d(TAG, "FirebaseAuthServ.SingIn(): SUCCESS!")
+                        Log.d(MY_TAG, "FirebaseAuthServ.SingIn(): SUCCESS!")
 
                         val user = auth.currentUser
 
@@ -80,7 +80,7 @@ class FirebaseAuthService : AuthService {
                         }
 
                     } else {
-                        Log.d(TAG, "FirebaseAuthServ.SingIn(): FAILURE!")
+                        Log.d(MY_TAG, "FirebaseAuthServ.SingIn(): FAILURE!")
                         val exception = task.exception
                         if (exception is FirebaseAuthException) {
                             val errorCode = exception.errorCode
@@ -103,7 +103,7 @@ class FirebaseAuthService : AuthService {
                             }
                         } else {
                             if (exception != null) {
-                                Log.d(TAG, "FirebaseAuthServ.SingIn()-Exception: " + exception.message)
+                                Log.d(MY_TAG, "FirebaseAuthServ.SingIn()-Exception: " + exception.message)
                             }
                             continuation.resume(Event.ERROR_UNKNOWN)
                         }
@@ -115,6 +115,49 @@ class FirebaseAuthService : AuthService {
     override fun signOut(): Event {
         auth.signOut()
         return Event.SUCCESS
+    }
+
+    override suspend fun resetPassword(email: String): Event {
+        return suspendCancellableCoroutine { continuation ->
+            auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(MY_TAG, "FirebaseAuthServ.resetPass: SUCCESS!")
+                        continuation.resume(Event.SUCCESS)
+                    } else {
+                        Log.d(MY_TAG, "FirebaseAuthServ.resetPass: FAILURE!")
+                        val exception = task.exception
+                        if (exception is FirebaseAuthException) {
+                            when (exception.errorCode) {
+                                "ERROR_INVALID_EMAIL" -> {
+                                    continuation.resume(Event.ERROR_INVALID_EMAIL)
+                                }
+
+                                "ERROR_EMAIL_ALREADY_IN_USE" -> {
+                                    continuation.resume(Event.ERROR_EMAIL_ALREADY_IN_USE)
+                                }
+
+                                "ERROR_USER_NOT_FOUND" -> {
+                                    continuation.resume(Event.ERROR_USER_NOT_FOUND)
+                                }
+
+                                "ERROR_TOO_MANY_REQUESTS" -> {
+                                    continuation.resume(Event.ERROR_TOO_MANY_REQUESTS)
+                                }
+
+                                else -> {
+                                    continuation.resume(Event.ERROR_UNKNOWN)
+                                }
+                            }
+                        } else {
+                            if (exception != null) {
+                                Log.d(MY_TAG, "FirebaseAuthServ.resetPass-Exception: " + exception.message)
+                            }
+                            continuation.resume(Event.ERROR_UNKNOWN)
+                        }
+                    }
+                }
+        }
     }
 
     override suspend fun signInWithGoogle(): Event {
@@ -131,21 +174,17 @@ class FirebaseAuthService : AuthService {
                         .addOnSuccessListener {
                             continuation.resume(Event.SUCCESS)
                             auth.signOut()
-                            Log.d(TAG, "FirebaseAuthServ.sendEmailVer(): SUCCESS!")
+                            Log.d(MY_TAG, "FirebaseAuthServ.sendEmailVer(): SUCCESS!")
                         }
                         .addOnFailureListener { exception ->
                             continuation.resume(Event.ERROR_UNKNOWN)
-                            Log.d(TAG, "FirebaseAuthServ.sendEmailVer: FAILURE!\nMessage: ${exception.message}")
+                            Log.d(MY_TAG, "FirebaseAuthServ.sendEmailVer: FAILURE!\nMessage: ${exception.message}")
                         }
                 } catch (e: Exception) {
-                    Log.d(TAG, "FirebaseAuthServ.sendEmailVer-Exception: ${e.message}")
+                    Log.d(MY_TAG, "FirebaseAuthServ.sendEmailVer-Exception: ${e.message}")
                 }
             }
         }
-    }
-
-    override suspend fun resetPassword(email: String): Event {
-        TODO("Not yet implemented")
     }
 
     override suspend fun rollBackRegister(): Event {
@@ -156,14 +195,14 @@ class FirebaseAuthService : AuthService {
                     user.delete()
                         .addOnSuccessListener {
                             continuation.resume(Event.SUCCESS)
-                            Log.d(TAG, "FirebaseAuthServ.rollBackReg: SUCCESS!")
+                            Log.d(MY_TAG, "FirebaseAuthServ.rollBackReg: SUCCESS!")
                         }
                         .addOnFailureListener { exception ->
                             continuation.resume(Event.ERROR_UNKNOWN)
-                            Log.d(TAG, "FirebaseAuthServ.rollBackReg: FAILURE!\nMessage: ${exception.message}")
+                            Log.d(MY_TAG, "FirebaseAuthServ.rollBackReg: FAILURE!\nMessage: ${exception.message}")
                         }
                 } catch (e: Exception) {
-                    Log.d(TAG, "FirebaseAuthServ.rollBackReg-Exception: ${e.message}")
+                    Log.d(MY_TAG, "FirebaseAuthServ.rollBackReg-Exception: ${e.message}")
                 }
             }
         }

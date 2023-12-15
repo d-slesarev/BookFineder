@@ -1,10 +1,13 @@
 package ua.khai.slesarev.bookfinder.data.repository.auth
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.util.Log
-import com.bumptech.glide.load.model.ResourceUriLoader
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.data.model.User
 import ua.khai.slesarev.bookfinder.data.remote.api.authentication.AuthService
 import ua.khai.slesarev.bookfinder.data.remote.api.authentication.impl.FirebaseAuthService
@@ -12,8 +15,7 @@ import ua.khai.slesarev.bookfinder.data.repository.user.UserRepository
 import ua.khai.slesarev.bookfinder.data.repository.user.UserRepositoryImpl
 import ua.khai.slesarev.bookfinder.data.util.Event
 import ua.khai.slesarev.bookfinder.data.util.Response
-import ua.khai.slesarev.bookfinder.data.util.TAG
-import ua.khai.slesarev.bookfinder.ui.util.UiState
+import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 
 class AuthRepositoryImpl(context: Context) : AuthRepository {
 
@@ -35,18 +37,18 @@ class AuthRepositoryImpl(context: Context) : AuthRepository {
 
         if (chackValue == Event.SUCCESS){
             try {
-                Log.i(TAG, "Before: FirebaseAuth.signUp()")
+                Log.i(MY_TAG, "Before: FirebaseAuth.signUp()")
                 respSignUp = auth.signUpWithEmailPassword(email, password, username)
 
                 if (respSignUp == Event.SUCCESS) {
                     withContext(Dispatchers.IO){
-                        Log.i(TAG, "Before: UserRepo.addUser()")
-                        respAddUser = userRepo.addUser(User(username = username, remember = false, email = email))
+                        Log.i(MY_TAG, "Before: UserRepo.addUser()")
+                        respAddUser = userRepo.addUser(User(username = username, email = email))
                     }
 
                     if (respAddUser is Response.Success) {
 
-                        Log.i(TAG, "Before: FirebaseAuth.sendEmailVer()")
+                        Log.i(MY_TAG, "Before: FirebaseAuth.sendEmailVer()")
                         respSendEmail = auth.sendEmailVerification()
 
                         if (respSendEmail == Event.SUCCESS) {
@@ -54,13 +56,13 @@ class AuthRepositoryImpl(context: Context) : AuthRepository {
                         } else {
 
                             withContext(Dispatchers.IO){
-                                Log.i(TAG, "Before: UserRepo.deleteUser()")
-                                rollBackAdd = userRepo.deleteUser(User(username = username, remember = false, email = email))
+                                Log.i(MY_TAG, "Before: UserRepo.deleteUser()")
+                                rollBackAdd = userRepo.deleteUser(User(username = username, email = email))
                             }
 
                             if (respAddUser is Response.Success){
 
-                                Log.d(TAG, "Before: FirebaseAuth.rollBackReg()")
+                                Log.d(MY_TAG, "Before: FirebaseAuth.rollBackReg()")
                                 rollBackReg = auth.rollBackRegister()
 
                                 if (rollBackReg == Event.SUCCESS){
@@ -89,7 +91,7 @@ class AuthRepositoryImpl(context: Context) : AuthRepository {
 
             }
             catch (e: Exception) {
-                Log.i(TAG, "AuthRepo.signUp-Exception: ${e.message}")
+                Log.i(MY_TAG, "AuthRepo.signUp-Exception: ${e.message}")
                 throw Exception("AuthRepo.signUp-Exception: ${e.message}")
             }
         }
@@ -106,7 +108,7 @@ class AuthRepositoryImpl(context: Context) : AuthRepository {
         if (chackValue == Event.SUCCESS){
 
             try {
-                Log.i(TAG, "Before: FirebaseAuth.signIn()")
+                Log.i(MY_TAG, "Before: FirebaseAuth.signIn()")
                 respSignIn = auth.signInWithEmailPassword(email, password)
 
                 if (respSignIn == Event.SUCCESS){
@@ -136,11 +138,29 @@ class AuthRepositoryImpl(context: Context) : AuthRepository {
     }
 
     override suspend fun resetPassword(email: String): Response<Event> {
-        TODO("Not yet implemented")
+        val result:Event
+
+        if (email.isNotEmpty()){
+            result = auth.resetPassword(email)
+
+            if (result == Event.SUCCESS){
+                return Response.Success(result)
+            } else {
+                return Response.Error(result.toString())
+            }
+        } else {
+            return Response.Error(Event.ERROR_MISSING_EMAIL.toString())
+        }
     }
 
     override suspend fun signInWithGoogle(): Response<Event> {
         TODO("Not yet implemented")
+    }
+
+    override fun getGoogleSignInIntent(activity: Activity): Intent {
+ /*       val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(activity.getString(R.string.def))*/
+        return Intent()
     }
 
     private fun signUpEmptyCheck(email: String, password: String, username: String): Event {

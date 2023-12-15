@@ -18,6 +18,7 @@ enum class Event {
     ERROR_USER_NOT_FOUND, // Пользователь не найден
     ERROR_UNCONFIRMED_EMAIL, // Код действия (например, подтверждение адреса электронной почты) истек.
     // ДРУГИЕ ОШИБКИ
+    ERROR_TOO_MANY_REQUESTS,
     ERROR_UNKNOWN,
     SERVER_ERROR,
     NETWORK_ERROR,

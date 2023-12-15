@@ -9,24 +9,24 @@ import ua.khai.slesarev.bookfinder.data.model.User
 import ua.khai.slesarev.bookfinder.data.util.DATABASE_NAME
 
 
-@Database(entities = [User::class], version = 3, exportSchema = false)
-abstract class AppDatabase : RoomDatabase(){
+@Database(entities = [User::class], version = 1, exportSchema = false)
+abstract class BookFinderDatabase : RoomDatabase(){
     abstract fun userDao(): UserDao
 
     companion object {
 
         // For Singleton instantiation
         @Volatile
-        private var instance: AppDatabase? = null
+        private var instance: BookFinderDatabase? = null
 
-        fun getInstance(context: Context): AppDatabase {
+        fun getInstance(context: Context): BookFinderDatabase {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(context).also { instance = it }
             }
         }
 
-        private fun buildDatabase(context: Context): AppDatabase {
-            return Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
+        private fun buildDatabase(context: Context): BookFinderDatabase {
+            return Room.databaseBuilder(context, BookFinderDatabase::class.java, DATABASE_NAME)
                 .fallbackToDestructiveMigration()
                 .build()
         }

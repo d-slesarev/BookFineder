@@ -7,6 +7,21 @@
     android:layout_height="match_parent"
     tools:context=".ui.home_screen.HomeActivity">
 
+    <ProgressBar
+        android:id="@+id/homeProgrBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="32dp"
+        android:foregroundGravity="center_vertical|center_horizontal"
+        android:theme="@style/Widget.Material3.CircularProgressIndicator.Medium"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.53" />
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout2"
         style="@style/MyAppBarStyle"

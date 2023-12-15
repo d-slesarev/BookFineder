@@ -1,7 +1,6 @@
 package ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SingIn
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
@@ -19,12 +18,11 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ua.khai.slesarev.bookfinder.ui.home_screen.HomeActivity
 import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.databinding.FragSingInBinding
 import ua.khai.slesarev.bookfinder.ui.util.UiState
 import ua.khai.slesarev.bookfinder.data.util.Event
-import ua.khai.slesarev.bookfinder.data.util.TAG
+import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import ua.khai.slesarev.bookfinder.ui.util.resourse_util.getResoursesForSignIn
 import kotlin.properties.Delegates
 
@@ -33,7 +31,6 @@ class SingIn : Fragment() {
     private val binding by lazy { FragSingInBinding.inflate(layoutInflater) }
     private val viewModel: SignInViewModel by viewModels()
     private val resorMap: Map<String, List<String>> = getResoursesForSignIn()
-    private var rememberState by Delegates.notNull<Boolean>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -108,6 +105,8 @@ class SingIn : Fragment() {
             is UiState.Error -> {
                 updateRender(uiState.response)
             }
+
+            else -> {}
         }
     }
 
@@ -142,7 +141,6 @@ class SingIn : Fragment() {
             Event.ERROR_USER_NOT_FOUND.toString() -> {
                 setResourses(response)
             }
-
 
             Event.ERROR_MISSING_PASSWORD.toString() -> {
                 setResourses(response)
@@ -191,20 +189,15 @@ class SingIn : Fragment() {
 
                 val bundle = Bundle().apply {
 
-                    Log.d(TAG, "userName: ${viewModel.userName}")
-                    Log.d(TAG, "userEmail: ${viewModel.userEmail}")
+                    Log.d(MY_TAG, "userName: ${viewModel.userName}")
+                    Log.d(MY_TAG, "userEmail: ${viewModel.userEmail}")
 
                     putString("userName", viewModel.userName)
                     putString("userEmail", viewModel.userEmail)
                 }
 
-                lifecycleScope.launch {
-                    rememberState = binding.rememberCheck.isChecked
-                    viewModel.updateRememberState(rememberState)
-                    findNavController().navigate(R.id.action_singIn_to_homeActivity, bundle)
-                    requireActivity().finish()
-                }
-
+                findNavController().navigate(R.id.action_singIn_to_homeActivity, bundle)
+                requireActivity().finish()
             }
 
             else -> {}

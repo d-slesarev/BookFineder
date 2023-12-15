@@ -1,20 +1,18 @@
 package ua.khai.slesarev.bookfinder.ui.home_screen
 
 import android.app.Dialog
-import android.content.ContentValues.TAG
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -26,17 +24,13 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.search.SearchBar
 import com.google.android.material.search.SearchView
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ua.khai.slesarev.bookfinder.R
-import ua.khai.slesarev.bookfinder.data.local.database.AppDatabase
-import ua.khai.slesarev.bookfinder.data.local.database.dao.UserDao
-import ua.khai.slesarev.bookfinder.data.model.User
+import ua.khai.slesarev.bookfinder.databinding.ActivityHomeBinding
+import ua.khai.slesarev.bookfinder.databinding.FragSingInBinding
 import ua.khai.slesarev.bookfinder.ui.home_screen.fragments.HomeActivityViewModel
-import ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SingIn.SignInViewModel
+import ua.khai.slesarev.bookfinder.ui.sign_in_screen.SingInActivity
 
 class HomeActivity : AppCompatActivity() {
 
@@ -44,13 +38,15 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var userNameText: TextView
     private lateinit var userEmailText: TextView
     private val viewModel: HomeActivityViewModel by viewModels()
-    private var localDatabaseApp: AppDatabase = AppDatabase.getInstance(this)
-    private var localDao: UserDao = localDatabaseApp.userDao()
-    private var auth: FirebaseAuth = Firebase.auth
+    private lateinit var intent: Intent
+    private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        intent =Intent(this@HomeActivity, SingInActivity::class.java)
+        val homeProgressBar = binding.homeProgrBar
 
         val dialog = Dialog(this)
 
@@ -63,6 +59,12 @@ class HomeActivity : AppCompatActivity() {
         userNameText = dialog.findViewById(R.id.userNameText)
         userEmailText = dialog.findViewById(R.id.userEmailText)
 
+        lifecycleScope.launch {
+            viewModel.updateUI()
+            userNameText.text = viewModel.userName
+            userEmailText.text = viewModel.userEmail
+        }
+
         closeBtn.setOnClickListener(object : View.OnClickListener {
 
             override fun onClick(view: View) {
@@ -73,12 +75,13 @@ class HomeActivity : AppCompatActivity() {
         signOutBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
                 viewModel.singOut()
+                dialog.dismiss()
+                //homeProgressBar.visibility = View.VISIBLE
+                startActivity(intent)
+                //homeProgressBar.visibility = View.GONE
+                finish()
             }
         })
-
-        userNameText.text = intent.getStringExtra("userName")
-        userEmailText.text = intent.getStringExtra("userEmail")
-
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNav)
 
@@ -106,7 +109,6 @@ class HomeActivity : AppCompatActivity() {
                     dataSource: com.bumptech.glide.load.DataSource?,
                     isFirstResource: Boolean
                 ): Boolean {
-                    Log.d(TAG, "loadImage: ready")
                     resource?.let { renderProfileImage(it, searchBar) }
                     return true
                 }
@@ -117,7 +119,6 @@ class HomeActivity : AppCompatActivity() {
                     target: Target<Drawable>?,
                     isFirstResource: Boolean
                 ): Boolean {
-                    Log.e(TAG, "loadImage: failed")
                     return true
                 }
 
@@ -143,20 +144,6 @@ class HomeActivity : AppCompatActivity() {
     private fun renderProfileImage(resource:Drawable, searchTopBar: SearchBar) {
         lifecycleScope.launch(Dispatchers.Main){ //Running on Main/UI thread
             searchTopBar.menu.findItem(R.id.action_search).icon = resource
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "HomeActivity.onDestroy(): Activated!")
-        if (auth.currentUser != null) {
-            val user = localDao.getUserByID(auth.currentUser!!.uid)
-            if (user is User) {
-                if (!user.remember) {
-                    auth.signOut()
-                    Log.d(TAG, "HomeActivity.signOut(): SUCCESS!")
-                }
-            }
         }
     }
 }
