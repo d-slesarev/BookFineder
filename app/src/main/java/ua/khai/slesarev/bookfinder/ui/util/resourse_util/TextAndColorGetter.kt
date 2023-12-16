@@ -19,6 +19,8 @@ val resourses_for_sign_up: Map<String, List<String>> = mapOf(
 
 val resourses_for_sign_in: Map<String, List<String>> = mapOf(
     "ERROR_INVALID_EMAIL" to listOf("invalid_email", "not_checked", "RED", "BROWN"),
+    "ERROR_WRONG_PASSWORD" to listOf("not_checked", "wrong_password", "BROWN", "RED"),
+    "ERROR_EMAIL_ALREADY_IN_USE" to listOf("email_in_use", "not_checked", "RED", "BROWN"),
     "ERROR_USER_NOT_FOUND" to listOf("user_not_found", "not_checked", "RED", "BROWN"),
     "ERROR_INVALID_CREDENTIAL" to listOf("invalid_credential", "invalid_credential", "RED", "RED"),
     "ERROR_MISSING_EMAIL" to listOf("required", "not_checked", "RED", "BROWN"),

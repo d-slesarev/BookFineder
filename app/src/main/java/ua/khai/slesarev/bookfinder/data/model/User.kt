@@ -1,5 +1,6 @@
 package ua.khai.slesarev.bookfinder.data.model
 
+import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -11,5 +12,7 @@ data class User(
     @ColumnInfo(name = "user_name")
     var username: String,
     @ColumnInfo(name = "email")
-    var email: String
+    var email: String,
+    @ColumnInfo(name = "image_uri")
+    var imageUri: String
 )

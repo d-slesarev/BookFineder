@@ -1,7 +1,9 @@
 package ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SingIn
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -15,6 +17,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.common.api.ApiException
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,10 +27,12 @@ import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.databinding.FragSingInBinding
 import ua.khai.slesarev.bookfinder.ui.util.UiState
 import ua.khai.slesarev.bookfinder.data.util.Event
+import ua.khai.slesarev.bookfinder.data.util.GOOGLE_REQUEST_CODE
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import ua.khai.slesarev.bookfinder.ui.util.resourse_util.getResoursesForSignIn
 import kotlin.properties.Delegates
 
+@Suppress("DEPRECATION")
 class SingIn : Fragment() {
 
     private val binding by lazy { FragSingInBinding.inflate(layoutInflater) }
@@ -40,8 +47,41 @@ class SingIn : Fragment() {
         return binding.root
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        try {
+            if (requestCode == GOOGLE_REQUEST_CODE){
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                try {
+                    val account = task.getResult(ApiException::class.java)
+                    if (account != null){
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            Log.i(MY_TAG, "Before: viewModel.signInWithGoogle()")
+                            account.idToken?.let { viewModel.signInWithGoogle(account, it) }
+                        }
+                    }
+                } catch (e: ApiException){
+                    Log.d(MY_TAG, "SingInActivity.onActivityResult-Exception: ${e.message}")
+                }
+            } else {
+                super.onActivityResult(requestCode, resultCode, data)
+            }
+        } catch (e: Exception) {
+            Log.d(MY_TAG, "SingInActivity.onActivityResult-Exception: ${e.message}")
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.googleSingInBtn.setOnClickListener {
+            try {
+                val intent = viewModel.getGoogleSignInIntent(requireContext())
+                startActivityForResult(intent, GOOGLE_REQUEST_CODE)
+            } catch (e: Exception) {
+                Log.d(MY_TAG, "googleBtn.setOnClickListener-Exception: ${e.message}")
+            }
+        }
 
         val navController = findNavController()
 
@@ -105,8 +145,6 @@ class SingIn : Fragment() {
             is UiState.Error -> {
                 updateRender(uiState.response)
             }
-
-            else -> {}
         }
     }
 
@@ -143,6 +181,14 @@ class SingIn : Fragment() {
             }
 
             Event.ERROR_MISSING_PASSWORD.toString() -> {
+                setResourses(response)
+            }
+
+            Event.ERROR_WRONG_PASSWORD.toString() -> {
+                setResourses(response)
+            }
+
+            Event.ERROR_EMAIL_ALREADY_IN_USE.toString() -> {
                 setResourses(response)
             }
 
@@ -186,17 +232,13 @@ class SingIn : Fragment() {
             Event.SUCCESS.toString() -> {
 
                 setResourses(response)
+                findNavController().navigate(R.id.action_singIn_to_homeActivity)
+                requireActivity().finish()
+            }
 
-                val bundle = Bundle().apply {
+            Event.GOOGLE_SUCCESS.toString() -> {
 
-                    Log.d(MY_TAG, "userName: ${viewModel.userName}")
-                    Log.d(MY_TAG, "userEmail: ${viewModel.userEmail}")
-
-                    putString("userName", viewModel.userName)
-                    putString("userEmail", viewModel.userEmail)
-                }
-
-                findNavController().navigate(R.id.action_singIn_to_homeActivity, bundle)
+                findNavController().navigate(R.id.action_singIn_to_homeActivity)
                 requireActivity().finish()
             }
 

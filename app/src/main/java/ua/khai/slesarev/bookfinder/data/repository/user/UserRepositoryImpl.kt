@@ -14,8 +14,9 @@ import ua.khai.slesarev.bookfinder.data.remote.database.service.UserDaoService
 import ua.khai.slesarev.bookfinder.data.util.Event
 import ua.khai.slesarev.bookfinder.data.util.Response
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
+import ua.khai.slesarev.bookfinder.data.util.getDefaultProfileImage
 
-class UserRepositoryImpl(context: Context): UserRepository {
+class UserRepositoryImpl(private val context: Context): UserRepository {
 
     private var remoteDao: UserDaoService = UserDaoServiceImpl()
     private var localDatabase: BookFinderDatabase = BookFinderDatabase.getInstance(context)
@@ -56,7 +57,7 @@ class UserRepositoryImpl(context: Context): UserRepository {
         if (uid != null) {
             val unchangedUser:User = localDao.getUserByID(uid)
             user.uid = uid
-            val result = localDao.updateUser(id = user.uid, email = user.email, name = user.username)
+            val result = localDao.updateUser(id = user.uid, email = user.email, name = user.username, imageUri = user.imageUri)
             if (result > 0){
                 try {
                     val result = remoteDao.updateUser(UserRemote(user.username, user.email))
@@ -65,7 +66,7 @@ class UserRepositoryImpl(context: Context): UserRepository {
                         Log.d(MY_TAG, "UserRepository.updateUser: SUCCESS!")
                         return Response.Success(result)
                     }else {// Возвращаем пользователя в локальную БД, так как в Firebase обновить не вышло
-                        localDao.updateUser(id = user.uid, email = unchangedUser.email, name = unchangedUser.username)
+                        localDao.updateUser(id = user.uid, email = unchangedUser.email, name = unchangedUser.username, imageUri = user.imageUri)
                         Log.d(MY_TAG, "UserRepository.updateUser: FAILURE!")
                         return Response.Error(result.toString())
                     }
@@ -112,6 +113,7 @@ class UserRepositoryImpl(context: Context): UserRepository {
 
     override suspend fun getUserByUID(): Response<User> {
         val uid = auth.currentUser?.uid
+        var uri = getDefaultProfileImage(context)
         if (uid != null) {
             val user = localDao.getUserByID(uid)
             if (user != null){
@@ -123,7 +125,7 @@ class UserRepositoryImpl(context: Context): UserRepository {
                     if (response is Response.Success){
 
                         val remoteUser = response.data
-                        val user = User(uid = uid, username = remoteUser.username, email = remoteUser.email)
+                        val user = User(uid = uid, username = remoteUser.username, email = remoteUser.email, imageUri = uri.toString())
                         Log.d(MY_TAG, "UserRepository.getUserByID(Firebase): SUCCESS!")
                         val insert = localDao.insertUser(user)
 

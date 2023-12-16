@@ -1,14 +1,19 @@
 package ua.khai.slesarev.bookfinder.data.remote.api.authentication
 
+import android.content.Context
+import android.content.Intent
 import ua.khai.slesarev.bookfinder.data.util.Event
+import ua.khai.slesarev.bookfinder.data.util.Response
 
 interface AuthService {
 
     suspend fun signUpWithEmailPassword(email:String, password:String, username: String): Event
     suspend fun signInWithEmailPassword(email:String, password:String): Event
     fun signOut(): Event
-    suspend fun signInWithGoogle(): Event
+    fun signOutGoogle(): Event
+    suspend fun signInWithGoogle(token:String): Response<Event>
     suspend fun sendEmailVerification(): Event
+    fun getGoogleSignInIntent(context: Context): Intent
     suspend fun resetPassword(email: String): Event
     suspend fun rollBackRegister(): Event
 

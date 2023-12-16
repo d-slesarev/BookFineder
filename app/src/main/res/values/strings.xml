@@ -6,6 +6,7 @@
 
     <string name="invalid_email">Incorrect e-mail</string>
     <string name="email_in_use">This e-mail is already in use</string>
+    <string name="wrong_password">Incorrect password</string>
     <string name="invalid_credential">The e-mail or password is incorrect</string>
     <string name="week_password">Password is too simple or short</string>
     <string name="user_not_found">This user doesn\'t exist</string>

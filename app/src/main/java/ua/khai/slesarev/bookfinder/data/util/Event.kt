@@ -21,11 +21,18 @@ enum class Event {
     ERROR_TOO_MANY_REQUESTS,
     ERROR_UNKNOWN,
     SERVER_ERROR,
-    NETWORK_ERROR,
+    ERROR_WRONG_PASSWORD,
     FAILURE,
     // ЕСЛИ ВСЁ ХОРОШО
     SUCCESS,
-    DEFAULT
+    GOOGLE_SUCCESS,
+    // ВОЗМОЖНЫЕ КОДЫ ОШИБОК ПРИ ВХОДЕ ЧЕРЕЗ GOOGLE
+    ERROR_INVALID_CUSTOM_TOKEN,
+    ERROR_CUSTOM_TOKEN_MISMATCH,
+    ERROR_USER_MISMATCH,
+    // ДРУГИЕ КОДЫ
+    NEW_USER,
+    OLD_USER
 }
 
 /*

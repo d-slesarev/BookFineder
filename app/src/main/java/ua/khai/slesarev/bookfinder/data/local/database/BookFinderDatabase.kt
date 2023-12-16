@@ -9,7 +9,7 @@ import ua.khai.slesarev.bookfinder.data.model.User
 import ua.khai.slesarev.bookfinder.data.util.DATABASE_NAME
 
 
-@Database(entities = [User::class], version = 1, exportSchema = false)
+@Database(entities = [User::class], version = 3, exportSchema = false)
 abstract class BookFinderDatabase : RoomDatabase(){
     abstract fun userDao(): UserDao
 
