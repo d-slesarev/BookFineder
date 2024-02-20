@@ -21,13 +21,9 @@ import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import ua.khai.slesarev.bookfinder.ui.home_screen.HomeActivity
 import ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SingIn.SignInViewModel
 import ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SingIn.SingIn
-
 @Suppress("DEPRECATION")
 class SingInActivity: AppCompatActivity() {
-
-    private val viewModel: SignInViewModel by viewModels()
     private var auth: FirebaseAuth = Firebase.auth
-    //private lateinit var account: GoogleSignInAccount
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_BookFinder)

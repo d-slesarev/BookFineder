@@ -48,7 +48,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        intent =Intent(this@HomeActivity, SingInActivity::class.java)
+        intent = Intent(this@HomeActivity, SingInActivity::class.java)
         val homeProgressBar = binding.homeProgrBar
 
         val dialog = Dialog(this)
@@ -88,9 +88,7 @@ class HomeActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     viewModel.singOut()
                     dialog.dismiss()
-                    //homeProgressBar.visibility = View.VISIBLE
                     startActivity(intent)
-                    //homeProgressBar.visibility = View.GONE
                     finish()
                 }
             }

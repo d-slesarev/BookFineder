@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeScreen"
-        android:name="ua.khai.slesarev.bookfinder.ui.home_screen.fragments.HomeScreen"
+        android:name="ua.khai.slesarev.bookfinder.ui.home_screen.fragments.Home.HomeScreen"
         android:label="frag_home"
         tools:layout="@layout/frag_home" />
     <fragment

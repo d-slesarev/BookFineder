@@ -11,7 +11,6 @@ import ua.khai.slesarev.bookfinder.ui.util.UiState
 class PassRecoveryViewModel(application: Application) : AndroidViewModel(application) {
 
     private val authHelper: AuthRepository = AuthRepositoryImpl(application)
-
     val uiState: MutableLiveData<UiState> = MutableLiveData()
 
     suspend fun resetPassword(email: String) {

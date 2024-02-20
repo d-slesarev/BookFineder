@@ -12,7 +12,6 @@ import ua.khai.slesarev.bookfinder.ui.util.UiState
 class SignUpViewModel(application: Application) : AndroidViewModel(application) {
 
     private val authHelper: AuthRepository = AuthRepositoryImpl(application)
-
     val uiState: MutableLiveData<UiState> = MutableLiveData()
 
     suspend fun signUpWithEmailPassword(email: String, password: String, username: String) {

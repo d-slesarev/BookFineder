@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import ua.khai.slesarev.bookfinder.data.local.database.dao.UserDao
 import ua.khai.slesarev.bookfinder.data.util.Event
 import ua.khai.slesarev.bookfinder.data.util.Response
 import ua.khai.slesarev.bookfinder.ui.util.UiState

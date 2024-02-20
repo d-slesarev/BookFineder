@@ -18,5 +18,4 @@ import ua.khai.slesarev.bookfinder.ui.sign_in_screen.SingInActivityViewModel
 
 class BookFinderApp : Application() {
 
-
 }

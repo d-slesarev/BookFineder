@@ -187,8 +187,6 @@ class FirebaseAuthService(private val context: Context) : AuthService {
         }
     }
 
-
-
     override suspend fun signInWithGoogle(token: String): Response<Event> {
         return suspendCancellableCoroutine { continuation ->
             val credential = GoogleAuthProvider.getCredential(token, null)

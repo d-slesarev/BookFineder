@@ -14,14 +14,16 @@ import ua.khai.slesarev.bookfinder.data.local.database.dao.UserDao
 import ua.khai.slesarev.bookfinder.data.model.User
 import ua.khai.slesarev.bookfinder.data.repository.auth.AuthRepository
 import ua.khai.slesarev.bookfinder.data.repository.auth.AuthRepositoryImpl
+import ua.khai.slesarev.bookfinder.data.repository.user.UserRepository
+import ua.khai.slesarev.bookfinder.data.repository.user.UserRepositoryImpl
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 
 class HomeActivityViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var localDatabaseApp: BookFinderDatabase = BookFinderDatabase.getInstance(application)
-    private var localDao: UserDao = localDatabaseApp.userDao()
     private var auth: FirebaseAuth = Firebase.auth
+    private val userRepo: UserRepository = UserRepositoryImpl(application)
     private var authRepo: AuthRepository = AuthRepositoryImpl(application)
+    private var localDao: UserDao = userRepo.localDao
 
     var userEmail: String = ""
     var userName: String = ""

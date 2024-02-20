@@ -1,4 +1,4 @@
-package ua.khai.slesarev.bookfinder.ui.home_screen.fragments
+package ua.khai.slesarev.bookfinder.ui.home_screen.fragments.Home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -32,7 +32,6 @@ import kotlin.coroutines.resume
 class SignInViewModel(private val application: Application) : AndroidViewModel(application) {
 
     private val authHelper: AuthRepository = AuthRepositoryImpl(application)
-
     val uiState: MutableLiveData<UiState> = MutableLiveData()
 
     suspend fun signInWithEmailPassword(email: String, password: String) {

@@ -11,7 +11,7 @@
         android:clipToPadding="true"
         tools:context=".ui.sign_in_screen.fragments.SingIn.SingIn"
         tools:viewBindingIgnore="true">
-
+ 
         <Button
             android:id="@+id/singInBtn"
             style="@style/ElevatedButton"
@@ -99,30 +99,30 @@
             app:layout_constraintVertical_bias="0.0"
             tools:ignore="TouchTargetSizeCheck" />
 
-        <Button
-            android:id="@+id/googleSingInBtn"
-            style="@style/OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="18dp"
-            android:backgroundTint="#D6CEC6"
-            android:drawableLeft="@drawable/ic_google_logo"
-            android:drawablePadding="15dp"
-            android:fontFamily="@font/habibi"
-            android:paddingLeft="70dp"
-            android:text="Sign-In with Google"
-            android:textAlignment="textStart"
-            android:textColor="#121212"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/separator_OR"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="TouchTargetSizeCheck" />
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/googleSingInBtn"
+                style="@style/OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:backgroundTint="#D6CEC6"
+                app:icon="@drawable/ic_google"
+                app:iconTint="@null"
+                app:iconGravity="textStart"
+                android:fontFamily="@font/habibi"
+                android:text="Sign-In with Google"
+                android:textAlignment="center"
+                android:textColor="#121212"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/separator_OR"
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="TouchTargetSizeCheck"
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="18dp" />
+
 
         <LinearLayout
             android:id="@+id/separator_AHA"

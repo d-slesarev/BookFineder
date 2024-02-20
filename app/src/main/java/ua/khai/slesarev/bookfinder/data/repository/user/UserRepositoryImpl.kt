@@ -20,7 +20,7 @@ class UserRepositoryImpl(private val context: Context): UserRepository {
 
     private var remoteDao: UserDaoService = UserDaoServiceImpl()
     private var localDatabase: BookFinderDatabase = BookFinderDatabase.getInstance(context)
-    private var localDao:UserDao = localDatabase.userDao()
+    override var localDao: UserDao = localDatabase.userDao()
     private var auth: FirebaseAuth = Firebase.auth
 
     override suspend fun addUser(user: User): Response<Event> {
