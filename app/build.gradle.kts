@@ -62,6 +62,10 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.github.bumptech.glide:glide:4.15.1")
 
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    implementation("androidx.appcompat:appcompat:1.0.0") //Above 1.0.0
 
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("com.google.android.gms:play-services-auth:19.0.0")
