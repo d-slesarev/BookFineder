@@ -13,7 +13,13 @@ import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.databinding.BookItemBinding
 import ua.khai.slesarev.bookfinder.databinding.HomeItemBinding
 
-class BookListAdapter(private val items: List<String>) : RecyclerView.Adapter<BookListAdapter.BookHolder>() {
+class BookListAdapter(private val items: List<String>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        const val TYPE_ITEM = 0
+        const val TYPE_LOADING = 1
+    }
+
     class BookHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         private val bookTitle: TextView = itemView.findViewById(R.id.bookTitle)
         private val bookCover: ImageView = itemView.findViewById(R.id.bookCover)
@@ -30,14 +36,30 @@ class BookListAdapter(private val items: List<String>) : RecyclerView.Adapter<Bo
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.book_item, parent, false)
-        return BookHolder(view)
+    class LoadingItemHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
+
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemViewType(position: Int): Int {
+        return if (position == items.size) TYPE_LOADING // Если элемент последний, возвращаем TYPE_FOOTER
+        else TYPE_ITEM
+    }
 
-    override fun onBindViewHolder(holder: BookHolder, position: Int) {
-        holder.bind(items[position])
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : RecyclerView.ViewHolder {
+        return if (viewType == TYPE_ITEM){
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.book_item, parent, false)
+            BookHolder(view)
+        } else {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.loading_item, parent, false)
+            LoadingItemHolder(view)
+        }
+    }
+
+    override fun getItemCount(): Int = items.size + 1
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if(holder is BookHolder){
+            holder.bind(items[position])
+        }
     }
 }

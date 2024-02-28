@@ -6,9 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.databinding.FragHomeBinding
 import ua.khai.slesarev.bookfinder.databinding.FragSingInBinding
@@ -31,6 +36,17 @@ class HomeScreen : Fragment() {
 
         val homeGroupList: RecyclerView = view.findViewById(R.id.homeGroupList)
         val shimmerView: ShimmerFrameLayout = view.findViewById(R.id.shimmer_view_container)
+        val swipeRefreshLayout: SwipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
+
+        shimmerView.startShimmer()
+        swipeRefreshLayout.visibility = View.GONE
+
+        lifecycleScope.launch {
+            delay(3000)
+
+            shimmerView.stopShimmer()
+            swipeRefreshLayout.visibility = View.VISIBLE
+        }
 
         try {
             homeGroupList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -38,6 +54,8 @@ class HomeScreen : Fragment() {
         } catch (e: Exception){
             Log.d("MY_TAG", "HomeScreen: ${e.message.toString()}")
         }
+
+
     }
 
 }
