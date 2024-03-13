@@ -6,6 +6,8 @@ import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.Scopes
+import com.google.android.gms.common.api.Scope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -134,10 +136,16 @@ class FirebaseAuthService(private val context: Context) : AuthService {
         return Event.SUCCESS
     }
 
-    override fun signOutGoogle(): Event {
+    private fun getGoogleSignInClient(): GoogleSignInClient {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestProfile()
+            .requestScopes(Scope(Scopes.PROFILE),  Scope("https://www.googleapis.com/auth/books"))
             .requestIdToken(context.getString(R.string.default_web_client_id)).build()
-        signInClient = GoogleSignIn.getClient(context, gso)
+
+        return GoogleSignIn.getClient(context, gso)
+    }
+
+    override fun signOutGoogle(): Event {
+        signInClient = getGoogleSignInClient()
 
         signInClient.signOut()
 
@@ -263,10 +271,7 @@ class FirebaseAuthService(private val context: Context) : AuthService {
     }
 
     override fun getGoogleSignInIntent(context:Context): Intent {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestProfile()
-            .requestIdToken(context.getString(R.string.default_web_client_id)).build()
-
-        signInClient = GoogleSignIn.getClient(context, gso)
+        signInClient = getGoogleSignInClient()
 
         return signInClient.signInIntent
     }
