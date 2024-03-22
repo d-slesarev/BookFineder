@@ -58,8 +58,7 @@ class AuthRepositoryImpl(private val context: Context) : AuthRepository {
 
                             withContext(Dispatchers.IO) {
                                 Log.i(MY_TAG, "Before: UserRepo.deleteUser()")
-                                rollBackAdd =
-                                    userRepo.deleteUser(User(username = username, email = email, imageUri = uri.toString()))
+                                rollBackAdd = userRepo.deleteUser(User(username = username, email = email, imageUri = uri.toString()))
                             }
 
                             if (respAddUser is Response.Success) {

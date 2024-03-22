@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.shimmer.ShimmerFrameLayout
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -24,7 +25,11 @@ import ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SingIn.SignInView
 import ua.khai.slesarev.bookfinder.ui.util.StateHomeList
 import ua.khai.slesarev.bookfinder.ui.util.UiState
 import ua.khai.slesarev.bookfinder.ui.util.resourse_util.getBookResourses
-
+/*TODO: Реализуй механизм пагинации. То есть подгрузки новых книг
+    с Books API таким способом что бы подгружать список кусочками*/
+/*TODO: Реализуй способ подгрузки списка книг для случая первого запуска приложения
+*  и для случия повторной отрисовки фрагмента*/
+/*TODO: Реализуй перезагрузку списка книг с учётом наличия или отсутствия новых книг в  списках*/
 class HomeScreen : Fragment() {
 
     private val booksMap = getBookResourses()
@@ -49,8 +54,6 @@ class HomeScreen : Fragment() {
         shimmerView = view.findViewById(R.id.shimmer_view_container)
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
 
-        shimmerView.startShimmer()
-        swipeRefreshLayout.visibility = View.GONE
 
         viewModel.uiState.observe(requireActivity()) { uiState ->
             if (uiState != null) {
@@ -58,9 +61,16 @@ class HomeScreen : Fragment() {
             }
         }
 
+        shimmerView.startShimmer()
+        swipeRefreshLayout.visibility = View.GONE
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            viewModel.loadContent()
+        }
+
     }
 
-    private fun render(uiState: StateHomeList<List<BookItem>>) {
+    private fun render(uiState: StateHomeList<Map<String, List<BookItem>>>) {
         when (uiState) {
             is StateHomeList.Loading -> {}
 
@@ -71,15 +81,19 @@ class HomeScreen : Fragment() {
         }
     }
 
-    private fun updateRender(response: List<BookItem>) {
-        shimmerView.stopShimmer()
-        swipeRefreshLayout.visibility = View.VISIBLE
+    private fun updateRender(response: Map<String, List<BookItem>>) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            shimmerView.stopShimmer()
+            swipeRefreshLayout.visibility = View.VISIBLE
 
-        try {
-            homeGroupList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            homeGroupList.adapter = HomeGroupAdapter(booksMap)
-        } catch (e: Exception){
-            Log.d("MY_TAG", "HomeScreen: ${e.message.toString()}")
+            try {
+                homeGroupList.layoutManager =
+                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                Log.d("MY_TAG", "--> HomeGroupAdapter(response)")
+                homeGroupList.adapter = HomeGroupAdapter(response)
+            } catch (e: Exception) {
+                Log.d("MY_TAG", "HomeScreen: ${e.message.toString()}")
+            }
         }
     }
 

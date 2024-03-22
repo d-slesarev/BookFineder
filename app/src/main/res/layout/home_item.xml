@@ -25,6 +25,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+            <!-- TODO: Попробуй как то увеличить размеры этой кнопки или заменить её
+                  на CardView с риплл эффектом-->
             <Button
                     style="@style/TextButton2"
                     android:layout_width="match_parent"

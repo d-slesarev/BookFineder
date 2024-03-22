@@ -31,6 +31,8 @@ val resourses_for_sign_in: Map<String, List<String>> = mapOf(
     "SUCCESS" to listOf("correctly", "correctly", "GREEN", "GREEN"),
 )
 
+
+
 val booksMap = mapOf(
     "Топ продаж" to listOf(
         "Лунный след\nДжонатан Свифт",
