@@ -3,7 +3,6 @@ package ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SingIn
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -18,7 +17,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
@@ -30,9 +28,13 @@ import ua.khai.slesarev.bookfinder.data.util.Event
 import ua.khai.slesarev.bookfinder.data.util.GOOGLE_REQUEST_CODE
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import ua.khai.slesarev.bookfinder.ui.util.resourse_util.getResoursesForSignIn
-import kotlin.properties.Delegates
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationResponse
+import ua.khai.slesarev.bookfinder.ui.util.launchAndCollectIn
+import ua.khai.slesarev.bookfinder.ui.util.toast
 
-@Suppress("DEPRECATION")
 class SingIn : Fragment() {
 
     private val binding by lazy { FragSingInBinding.inflate(layoutInflater) }
@@ -45,6 +47,11 @@ class SingIn : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    private val getAuthResponse = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        val dataIntent = it.data ?: return@registerForActivityResult
+        handleAuthResponseIntent(dataIntent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -74,16 +81,32 @@ class SingIn : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val navController = findNavController()
         binding.googleSingInBtn.setOnClickListener {
+            viewModel.openLoginPage()
+            /*
             try {
                 val intent = viewModel.getGoogleSignInIntent(requireContext())
                 startActivityForResult(intent, GOOGLE_REQUEST_CODE)
             } catch (e: Exception) {
                 Log.d(MY_TAG, "googleBtn.setOnClickListener-Exception: ${e.message}")
-            }
+            }*/
         }
 
-        val navController = findNavController()
+        viewModel.loadingFlow.launchAndCollectIn(viewLifecycleOwner) {
+            onLoad(it)
+        }
+        viewModel.openAuthPageFlow.launchAndCollectIn(viewLifecycleOwner) {
+            openAuthPage(it)
+        }
+        viewModel.toastFlow.launchAndCollectIn(viewLifecycleOwner) {
+            toast(it)
+        }
+        viewModel.authSuccessFlow.launchAndCollectIn(viewLifecycleOwner) {
+            findNavController().navigate(R.id.action_singIn_to_homeActivity)
+            requireActivity().finish()
+        }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.singIn) {
@@ -133,11 +156,29 @@ class SingIn : Fragment() {
         }
     }
 
+    private fun handleAuthResponseIntent(intent: Intent) {
+        // пытаемся получить ошибку из ответа. null - если все ок
+        val exception = AuthorizationException.fromIntent(intent)
+        // пытаемся получить запрос для обмена кода на токен, null - если произошла ошибка
+        val tokenExchangeRequest = AuthorizationResponse.fromIntent(intent)
+            ?.createTokenExchangeRequest()
+        when {
+            // авторизация завершались ошибкой
+            exception != null -> viewModel.onAuthCodeFailed(exception)
+            // авторизация прошла успешно, меняем код на токен
+            tokenExchangeRequest != null ->
+                viewModel.onAuthCodeReceived(tokenExchangeRequest)
+        }
+    }
+
+    private fun openAuthPage(intent: Intent) {
+        getAuthResponse.launch(intent)
+    }
+
     private fun render(uiState: UiState) {
 
         when (uiState) {
             is UiState.Loading -> {
-                onLoad()
             }
             is UiState.Success -> {
                 updateRender(uiState.response)
@@ -148,11 +189,11 @@ class SingIn : Fragment() {
         }
     }
 
-    private fun onLoad() = with(binding) {
-        signInProgrBar.visibility = View.VISIBLE
-        singInBtn.isEnabled = false
-        singUpBtn.isEnabled = false
-        googleSingInBtn.isEnabled = false
+    private fun onLoad(isLoading: Boolean) = with(binding) {
+        signInProgrBar.isVisible = !isLoading
+        singInBtn.isEnabled = isLoading
+        singUpBtn.isEnabled = isLoading
+        googleSingInBtn.isEnabled = isLoading
     }
 
     private fun updateRender(response:String) = with(binding){

@@ -3,9 +3,8 @@ package ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SignUp
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import ua.khai.slesarev.bookfinder.data.repository.auth.AuthRepository
-import ua.khai.slesarev.bookfinder.data.repository.auth.AuthRepositoryImpl
+import ua.khai.slesarev.bookfinder.data.repository.authentication.AuthRepository
+import ua.khai.slesarev.bookfinder.data.repository.authentication.AuthRepositoryImpl
 import ua.khai.slesarev.bookfinder.data.util.Response
 import ua.khai.slesarev.bookfinder.ui.util.UiState
 

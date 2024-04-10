@@ -3,6 +3,9 @@ package ua.khai.slesarev.bookfinder.data.repository.book
 import android.content.Context
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable.cancel
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -19,8 +22,8 @@ import kotlin.coroutines.resume
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import ua.khai.slesarev.bookfinder.data.util.getGroupTitles
 
-/*TODO: Подумай как реализовать наблюдение за данными тоблицы Books для мгновенной перерисовки домашнего списка
-*  и как это сделать эффективно с точки зрения скорости подгрузки*/
+/* TODO: Подумай как реализовать наблюдение за данными тоблицы Books для мгновенной перерисовки домашнего списка
+*   и как это сделать эффективно с точки зрения скорости подгрузки*/
 
 class BooksRepository(private val context: Context) {
 
@@ -28,10 +31,12 @@ class BooksRepository(private val context: Context) {
     private val authorizationToken = "Bearer ${GoogleSignIn.getLastSignedInAccount(context)?.idToken}"
     private val apiKey = "AIzaSyAnaVw7WeDc4_keRzsSoEJkD7hE616BbWQ"
     private val homeGroupTitles: List<Pair<String, Any>> = getGroupTitles()
+    private var auth: FirebaseAuth = Firebase.auth
 
     private suspend fun getBooksShelves() : BooksResponse<List<BookItem>> {
         return suspendCancellableCoroutine { continuation ->
             try {
+                Log.i(MY_TAG, "authorizationToken: $authorizationToken")
                 api.getBooksShelves(authorizationToken, apiKey = apiKey).enqueue(object :
                     Callback<BookShelvesResponse> {
                     override fun onResponse(call: Call<BookShelvesResponse>, response: Response<BookShelvesResponse>) {
@@ -131,6 +136,17 @@ class BooksRepository(private val context: Context) {
             }
         }
     }
+    private suspend fun getAccessToken(){
+
+        auth.getAccessToken(true)?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val idToken = task.result.token
+                Log.e(MY_TAG, "AccessToken: $idToken")
+            } else {
+                Log.e(MY_TAG, "AccessToken: Error!")
+            }
+        }
+    }
     suspend fun getHomeGroupContent() : Map<String, List<BookItem>>{
         val groupsContent = mutableMapOf<String, List<BookItem>>()
         val resultBS: BooksResponse<List<BookItem>>
@@ -174,6 +190,8 @@ class BooksRepository(private val context: Context) {
         }
 
         Log.e(MY_TAG, "\ngroupsContent: ${groupsContent.values.size}\n")
+
+        getAccessToken()
 
         Log.i(MY_TAG, "Before: RETURN!")
         return groupsContent

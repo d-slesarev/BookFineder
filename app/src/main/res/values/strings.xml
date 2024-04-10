@@ -30,5 +30,6 @@
     <string name="reset_message">We\'ve emailed you a link to reset your password. Please go to your e-mail and follow this link.</string>
     <string name="many_requests">Too many requests</string>
     <string name="many_requests_message">We\'ve temporarily blocked your account for security reasons due to too frequent requests. Please contact support with this problem.</string>
+    <string name="auth_canceled">Unknown Error. Try again after some time</string>
 
 </resources>

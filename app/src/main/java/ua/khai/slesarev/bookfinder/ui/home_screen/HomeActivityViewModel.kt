@@ -9,11 +9,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ua.khai.slesarev.bookfinder.data.local.database.BookFinderDatabase
 import ua.khai.slesarev.bookfinder.data.local.database.dao.UserDao
 import ua.khai.slesarev.bookfinder.data.model.User
-import ua.khai.slesarev.bookfinder.data.repository.auth.AuthRepository
-import ua.khai.slesarev.bookfinder.data.repository.auth.AuthRepositoryImpl
+import ua.khai.slesarev.bookfinder.data.repository.authentication.AuthRepository
+import ua.khai.slesarev.bookfinder.data.repository.authentication.AuthRepositoryImpl
 import ua.khai.slesarev.bookfinder.data.repository.user.UserRepository
 import ua.khai.slesarev.bookfinder.data.repository.user.UserRepositoryImpl
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG

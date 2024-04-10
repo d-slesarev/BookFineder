@@ -1,4 +1,4 @@
-package ua.khai.slesarev.bookfinder.data.remote.api.authentication.impl
+package ua.khai.slesarev.bookfinder.data.remote.api.authentication.googlesingin.impl
 
 import android.content.Context
 import android.content.Intent
@@ -15,13 +15,13 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.suspendCancellableCoroutine
 import ua.khai.slesarev.bookfinder.R
-import ua.khai.slesarev.bookfinder.data.remote.api.authentication.AuthService
+import ua.khai.slesarev.bookfinder.data.remote.api.authentication.googlesingin.FirebaseAuthService
 import ua.khai.slesarev.bookfinder.data.util.Event
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import ua.khai.slesarev.bookfinder.data.util.Response
 import kotlin.coroutines.resume
 
-class FirebaseAuthService(private val context: Context) : AuthService {
+class FirebaseAuthServiceImpl(private val context: Context) : FirebaseAuthService {
 
     private var auth: FirebaseAuth = Firebase.auth
     private lateinit var signInClient: GoogleSignInClient
@@ -200,6 +200,7 @@ class FirebaseAuthService(private val context: Context) : AuthService {
             val credential = GoogleAuthProvider.getCredential(token, null)
             Log.d(MY_TAG, "credential: $credential")
             Log.i(MY_TAG, "Before: FirebaseAuthServ.signInWithGoogle()")
+
             auth.signInWithCredential(credential)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful){
@@ -244,6 +245,15 @@ class FirebaseAuthService(private val context: Context) : AuthService {
                         }
                     }
                 }
+
+            auth.currentUser?.getIdToken(true)?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val idToken = task.result.token
+                    // Используйте idToken для выполнения авторизованных запросов к Google Books API
+                } else {
+                    // Обработка ошибок
+                }
+            }
         }
     }
 

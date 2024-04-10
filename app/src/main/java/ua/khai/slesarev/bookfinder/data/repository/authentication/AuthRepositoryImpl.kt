@@ -1,4 +1,4 @@
-package ua.khai.slesarev.bookfinder.data.repository.auth
+package ua.khai.slesarev.bookfinder.data.repository.authentication
 
 import android.content.Context
 import android.content.Intent
@@ -9,8 +9,8 @@ import kotlinx.coroutines.withContext
 import ua.khai.slesarev.bookfinder.data.local.database.BookFinderDatabase
 import ua.khai.slesarev.bookfinder.data.local.database.dao.UserDao
 import ua.khai.slesarev.bookfinder.data.model.User
-import ua.khai.slesarev.bookfinder.data.remote.api.authentication.AuthService
-import ua.khai.slesarev.bookfinder.data.remote.api.authentication.impl.FirebaseAuthService
+import ua.khai.slesarev.bookfinder.data.remote.api.authentication.googlesingin.FirebaseAuthService
+import ua.khai.slesarev.bookfinder.data.remote.api.authentication.googlesingin.impl.FirebaseAuthServiceImpl
 import ua.khai.slesarev.bookfinder.data.repository.user.UserRepository
 import ua.khai.slesarev.bookfinder.data.repository.user.UserRepositoryImpl
 import ua.khai.slesarev.bookfinder.data.util.Event
@@ -20,7 +20,7 @@ import ua.khai.slesarev.bookfinder.data.util.getDefaultProfileImage
 
 class AuthRepositoryImpl(private val context: Context) : AuthRepository {
 
-    private val auth: AuthService = FirebaseAuthService(context)
+    private val auth: FirebaseAuthService = FirebaseAuthServiceImpl(context)
     private val userRepo: UserRepository = UserRepositoryImpl(context)
     private var localDatabase: BookFinderDatabase = BookFinderDatabase.getInstance(context)
     private var localDao: UserDao = localDatabase.userDao()
