@@ -11,7 +11,7 @@ interface FirebaseAuthService {
     suspend fun signInWithEmailPassword(email:String, password:String): Event
     fun signOut(): Event
     fun signOutGoogle(): Event
-    suspend fun signInWithGoogle(token:String): Response<Event>
+    suspend fun signInWithGoogle(token:String): Event
     suspend fun sendEmailVerification(): Event
     fun getGoogleSignInIntent(context: Context): Intent
     suspend fun resetPassword(email: String): Event

@@ -8,11 +8,9 @@ import ua.khai.slesarev.bookfinder.data.util.Response
 
 interface AuthRepository {
 
-    suspend fun signUpWithEmailPassword(email:String, password:String, username: String): Response<Event>
-    suspend fun signInWithEmailPassword(email:String, password:String): Response<Event>
     fun signOut(): Response<Event>
     fun signOutGoogle(): Response<Event>
     suspend fun resetPassword(email: String): Response<Event>
-    suspend fun signInWithGoogle(account: GoogleSignInAccount, token:String): Response<Event>
+    suspend fun signInWithGoogle(token:String)
     fun getGoogleSignInIntent(context: Context): Intent
 }

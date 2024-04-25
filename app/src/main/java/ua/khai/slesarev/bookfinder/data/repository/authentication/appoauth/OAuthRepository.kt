@@ -6,6 +6,7 @@ import net.openid.appauth.AuthorizationService
 import net.openid.appauth.EndSessionRequest
 import net.openid.appauth.TokenRequest
 import ua.khai.slesarev.bookfinder.data.remote.api.authentication.appoauth.OAuthManager
+import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 
 class OAuthRepository {
     fun corruptAccessToken() {
@@ -35,6 +36,6 @@ class OAuthRepository {
         TokenStorage.accessToken = tokens.accessToken
         TokenStorage.refreshToken = tokens.refreshToken
         TokenStorage.idToken = tokens.idToken
-        Log.d("Oauth", "6. Tokens accepted:\n access=${tokens.accessToken}\nrefresh=${tokens.refreshToken}\nidToken=${tokens.idToken}")
+        Log.d(MY_TAG, "6. Tokens accepted:\n access=${tokens.accessToken}\nrefresh=${tokens.refreshToken}\nidToken=${tokens.idToken}")
     }
 }

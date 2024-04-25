@@ -12,12 +12,8 @@ import ua.khai.slesarev.bookfinder.data.model.User
 interface UserDao {
     @Insert
     fun insertUser(user: User): Long
-    @Query("UPDATE users SET email =:email, user_name = :name, image_uri = :imageUri  WHERE uid = :id")
-    fun updateUser(id: String, email: String, name: String, imageUri: String): Int
-    @Delete
-    fun deleteUser(user: User): Int
-    @Query("SELECT * FROM users WHERE uid = :id LIMIT 1")
-    fun getUserByID(id:String): User
+    @Query("SELECT * FROM users")
+    fun getAllUsers(): List<User>
     @Query("DELETE FROM users")
     fun deleteAllUsers(): Int
 

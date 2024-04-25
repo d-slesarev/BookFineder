@@ -28,13 +28,13 @@ class SingInActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_BookFinder)
         super.onCreate(savedInstanceState)
-
+/*
         if (auth.currentUser != null) {
             Log.d(MY_TAG, "SingInActivity.startActivity: Activated!")
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
             finish()
-        }
+        }*/
         setContentView(R.layout.activity_sing_in)
     }
 

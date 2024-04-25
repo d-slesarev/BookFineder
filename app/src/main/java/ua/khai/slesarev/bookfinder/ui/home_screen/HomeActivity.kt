@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.databinding.ActivityHomeBinding
 import ua.khai.slesarev.bookfinder.ui.sign_in_screen.SingInActivity
+import ua.khai.slesarev.bookfinder.ui.util.launchAndCollectIn
 
 class HomeActivity : AppCompatActivity() {
 
@@ -68,12 +69,13 @@ class HomeActivity : AppCompatActivity() {
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setupWithSearchBar(searchBar)
 
-        lifecycleScope.launch {
-            viewModel.updateUI()
-            userNameText.text = viewModel.userName
-            userEmailText.text = viewModel.userEmail
-            renderProfile(viewModel.userPhoto, profileImage)
-            renderSearchBarImage(viewModel.userPhoto, searchBar)
+        viewModel.getCurrentUserSuccessFlow.launchAndCollectIn(this){
+            val User = it.first()
+
+            userNameText.text = User.username
+            userEmailText.text = User.email
+            renderProfile(Uri.parse(User.imageUri), profileImage)
+            renderSearchBarImage(Uri.parse(User.imageUri), searchBar)
         }
 
         closeBtn.setOnClickListener(object : View.OnClickListener {

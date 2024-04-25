@@ -2,6 +2,7 @@ package ua.khai.slesarev.bookfinder.data.remote.api.authentication.appoauth
 
 import android.net.Uri
 import androidx.core.net.toUri
+import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
@@ -25,6 +26,8 @@ object OAuthManager {
 
     fun getAuthRequest(): AuthorizationRequest {
         val redirectUri = AuthConfig.URL_AUTH_REDIRECT.toUri()
+
+        val authState = AuthState()
 
         return AuthorizationRequest.Builder(
             serviceConfiguration,

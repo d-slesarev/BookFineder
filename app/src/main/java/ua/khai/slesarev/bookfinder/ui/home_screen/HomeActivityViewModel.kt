@@ -1,13 +1,20 @@
 package ua.khai.slesarev.bookfinder.ui.home_screen
 
 import android.app.Application
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ua.khai.slesarev.bookfinder.data.local.database.dao.UserDao
 import ua.khai.slesarev.bookfinder.data.model.User
@@ -22,49 +29,32 @@ class HomeActivityViewModel(application: Application) : AndroidViewModel(applica
     private var auth: FirebaseAuth = Firebase.auth
     private val userRepo: UserRepository = UserRepositoryImpl(application)
     private var authRepo: AuthRepository = AuthRepositoryImpl(application)
-    private var localDao: UserDao = userRepo.localDao
 
-    var userEmail: String = ""
-    var userName: String = ""
-    var userPhoto: Uri = Uri.EMPTY
+    private var defUser: List<User> = listOf(User(username = "Unknown Unknownson", email = "unknownson@unknown.com", imageUri = ""))
+
+    private val getCurrentUserEventChannel = Channel<List<User>>(Channel.BUFFERED)
+    val getCurrentUserSuccessFlow: Flow<List<User>>
+        get() =  getCurrentUserEventChannel.receiveAsFlow()
 
     suspend fun singOut() {
 
         try {
-            val uid = auth.currentUser?.uid
-            if (uid != null) {
-                val user = User(uid = uid, username = userName, email = userEmail, imageUri = "")
-                withContext(Dispatchers.IO) {
-                    val result = localDao.deleteUser(user)
-                    if (result > 0){
-                        auth.signOut()
-                        authRepo.signOutGoogle()
-                        Log.d(MY_TAG, "HomeActVM.singOut: SUCCESS!")
-                    } else {
-                        auth.signOut()
-                        authRepo.signOutGoogle()
-                        Log.d(MY_TAG, "HomeActVM.singOut: FAILURE!")
-                    }
-                }
-            } else {
-                Log.d(MY_TAG, "HomeActVM.singOut: FAILURE!")
-            }
+
         } catch (e: Exception) {
             Log.d(MY_TAG, "HomeActViewModel.singOut-Exception: ${e.message}")
         }
     }
 
-    suspend fun updateUI() {
-        try {
-            withContext(Dispatchers.IO) {
-                val user = localDao.getUserByID(auth.currentUser?.uid!!)
-
-                userName = user.username
-                userEmail = user.email
-                userPhoto = Uri.parse(user.imageUri)
+    fun getCurrentUser() {
+        viewModelScope.launch {
+            runCatching {
+                userRepo.getAllUsers()
+            }.onSuccess {
+                getCurrentUserEventChannel.trySendBlocking(it.getOrDefault(defUser))
+            }.onFailure {
+                getCurrentUserEventChannel.trySendBlocking(defUser)
+                Log.d(MY_TAG, "HomeActViewModel.getCurrentUser-Exception: ${it.message}")
             }
-        } catch (e: Exception) {
-            Log.d(MY_TAG, "HomeActViewModel.updateUI-Exception: ${e.message}")
         }
     }
 }

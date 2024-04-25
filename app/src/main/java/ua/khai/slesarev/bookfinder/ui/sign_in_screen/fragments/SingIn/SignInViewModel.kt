@@ -27,11 +27,15 @@ import net.openid.appauth.AuthorizationException
 import net.openid.appauth.TokenRequest
 import kotlinx.coroutines.flow.receiveAsFlow
 import ua.khai.slesarev.bookfinder.R
+import ua.khai.slesarev.bookfinder.data.repository.authentication.appoauth.TokenStorage
+import ua.khai.slesarev.bookfinder.data.repository.user.UserRepository
+import ua.khai.slesarev.bookfinder.data.repository.user.UserRepositoryImpl
 
 
 class SignInViewModel(private val application: Application) : AndroidViewModel(application) {
 
     private val authHelper: AuthRepository = AuthRepositoryImpl(application)
+    private val userRepo: UserRepository = UserRepositoryImpl(application)
     private val authRepository = OAuthRepository()
     private val authService: AuthorizationService = AuthorizationService(getApplication())
 
@@ -40,7 +44,9 @@ class SignInViewModel(private val application: Application) : AndroidViewModel(a
 
     private val openAuthPageEventChannel = Channel<Intent>(Channel.BUFFERED)
     private val toastEventChannel = Channel<Int>(Channel.BUFFERED)
-    private val authSuccessEventChannel = Channel<Unit>(Channel.BUFFERED)
+    private val tokenReceiptSuccessEventChannel = Channel<Unit>(Channel.BUFFERED)
+    private val firebaseAuthSuccessEventChannel = Channel<Unit>(Channel.BUFFERED)
+    private val loadProfileSuccessEventChannel = Channel<Unit>(Channel.BUFFERED)
 
     val openAuthPageFlow: Flow<Intent>
         get() = openAuthPageEventChannel.receiveAsFlow()
@@ -48,35 +54,43 @@ class SignInViewModel(private val application: Application) : AndroidViewModel(a
         get() = loadingMutableStateFlow.asStateFlow()
     val toastFlow: Flow<Int>
         get() = toastEventChannel.receiveAsFlow()
-    val authSuccessFlow: Flow<Unit>
-        get() = authSuccessEventChannel.receiveAsFlow()
+    val tokenReceiptSuccessFlow: Flow<Unit>
+        get() = tokenReceiptSuccessEventChannel.receiveAsFlow()
+    val firebaseAuthSuccessFlow: Flow<Unit>
+        get() = firebaseAuthSuccessEventChannel.receiveAsFlow()
 
-    suspend fun signInWithEmailPassword(email: String, password: String) {
-        uiState.value = UiState.Loading
+    val loadProfileSuccessFlow: Flow<Unit>
+        get() = loadProfileSuccessEventChannel.receiveAsFlow()
 
-        val result = authHelper.signInWithEmailPassword(email, password)
-
-        if (result is Response.Success) {
-            uiState.value = UiState.Success(result.data.toString())
-        } else if (result is Response.Error) {
-            authHelper.signOut()
-            uiState.value = UiState.Error(result.errorMessage)
+    fun signInWithGoogle() {
+        viewModelScope.launch {
+            runCatching {
+                TokenStorage.idToken?.let {
+                    authHelper.signInWithGoogle(it)
+                }
+            }.onSuccess {
+                firebaseAuthSuccessEventChannel.send(Unit)
+            }.onFailure {
+                loadingMutableStateFlow.value = false
+                toastEventChannel.send(R.string.auth_canceled)
+            }
         }
     }
 
-    suspend fun signInWithGoogle(account: GoogleSignInAccount, token: String) {
-        uiState.value = UiState.Loading
-        val result: Response<Event> = authHelper.signInWithGoogle(account, token)
-
-        if (result is Response.Success) {
-            Log.d(MY_TAG, "result: ${result.data}")
-            uiState.value = UiState.Success(result.data.toString())
-        } else if (result is Response.Error) {
-            uiState.value = UiState.Error(result.errorMessage)
+    fun loadUserProfile(){
+        viewModelScope.launch {
+            runCatching {
+                TokenStorage.accessToken?.let {
+                    userRepo.loadUserFromAPI(it)
+                }
+            }.onSuccess {
+                loadingMutableStateFlow.value = false
+                loadProfileSuccessEventChannel.send(Unit)
+            }.onFailure {
+                loadingMutableStateFlow.value = false
+                toastEventChannel.send(R.string.auth_canceled)
+            }
         }
-    }
-    fun getGoogleSignInIntent(context: Context): Intent {
-      return authHelper.getGoogleSignInIntent(context)
     }
 
     fun onAuthCodeFailed(exception: AuthorizationException) {
@@ -85,19 +99,18 @@ class SignInViewModel(private val application: Application) : AndroidViewModel(a
 
     fun onAuthCodeReceived(tokenRequest: TokenRequest) {
 
-        Log.d("Oauth", "3. Received code = ${tokenRequest.authorizationCode}")
+        Log.d(MY_TAG, "3. Received code = ${tokenRequest.authorizationCode}")
         loadingMutableStateFlow.value = true
 
         viewModelScope.launch {
             runCatching {
-                Log.d("Oauth", "4. Change code to token. Url = ${tokenRequest.configuration.tokenEndpoint}, verifier = ${tokenRequest.codeVerifier}")
+                Log.d(MY_TAG, "4. Change code to token. Url = ${tokenRequest.configuration.tokenEndpoint}, verifier = ${tokenRequest.codeVerifier}")
                 authRepository.performTokenRequest(
                     authService = authService,
                     tokenRequest = tokenRequest
                 )
             }.onSuccess {
-                loadingMutableStateFlow.value = false
-                authSuccessEventChannel.send(Unit)
+                tokenReceiptSuccessEventChannel.send(Unit)
             }.onFailure {
                 loadingMutableStateFlow.value = false
                 toastEventChannel.send(R.string.auth_canceled)
@@ -111,7 +124,7 @@ class SignInViewModel(private val application: Application) : AndroidViewModel(a
 
         val authRequest = authRepository.getAuthRequest()
 
-        Log.d("Oauth", "1. Generated verifier=${authRequest.codeVerifier},challenge=${authRequest.codeVerifierChallenge}")
+        Log.d(MY_TAG, "1. Generated verifier=${authRequest.codeVerifier},challenge=${authRequest.codeVerifierChallenge}")
 
         val openAuthPageIntent = authService.getAuthorizationRequestIntent(
             authRequest,
@@ -120,7 +133,7 @@ class SignInViewModel(private val application: Application) : AndroidViewModel(a
 
         openAuthPageEventChannel.trySendBlocking(openAuthPageIntent)
 
-        Log.d("Oauth", "2. Open auth page: ${authRequest.toUri()}")
+        Log.d(MY_TAG, "2. Open auth page: ${authRequest.toUri()}")
     }
 
     override fun onCleared() {

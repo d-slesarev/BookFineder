@@ -6,10 +6,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable.cancel
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,7 +15,7 @@ import ua.khai.slesarev.bookfinder.data.util.BooksResponse
 import ua.khai.slesarev.bookfinder.data.model.BookItem
 import ua.khai.slesarev.bookfinder.data.model.BookShelvesResponse
 import ua.khai.slesarev.bookfinder.data.remote.api.google_books.GoogleBooksAPI
-import ua.khai.slesarev.bookfinder.data.remote.api.google_books.RetrofitClient
+import ua.khai.slesarev.bookfinder.data.remote.api.google_books.RetrofitClientGB
 import kotlin.coroutines.resume
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import ua.khai.slesarev.bookfinder.data.util.getGroupTitles
@@ -27,7 +25,7 @@ import ua.khai.slesarev.bookfinder.data.util.getGroupTitles
 
 class BooksRepository(private val context: Context) {
 
-    private val api: GoogleBooksAPI = RetrofitClient.instance
+    private val api: GoogleBooksAPI = RetrofitClientGB.instance
     private val authorizationToken = "Bearer ${GoogleSignIn.getLastSignedInAccount(context)?.idToken}"
     private val apiKey = "AIzaSyAnaVw7WeDc4_keRzsSoEJkD7hE616BbWQ"
     private val homeGroupTitles: List<Pair<String, Any>> = getGroupTitles()

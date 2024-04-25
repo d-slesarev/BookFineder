@@ -1,14 +1,14 @@
-package ua.khai.slesarev.bookfinder.data.remote.api.google_books
+package ua.khai.slesarev.bookfinder.data.remote.api.user_profile
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitClient {
-    private const val BASE_URL = "https://www.googleapis.com/"
+object RetrofitClientGP {
+    private const val BASE_URL = "https://people.googleapis.com/"
 
-    val instance: GoogleBooksAPI by lazy {
+    val instance: GooglePeopleAPI by lazy {
 
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -17,12 +17,11 @@ object RetrofitClient {
             .addInterceptor(interceptor)
             .build()
 
-        val retrofit = Retrofit.Builder()
+        Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
-        retrofit.create(GoogleBooksAPI::class.java)
+            .create(GooglePeopleAPI::class.java)
     }
 }

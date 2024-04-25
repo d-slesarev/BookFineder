@@ -20,6 +20,7 @@ import ua.khai.slesarev.bookfinder.data.util.Event
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import ua.khai.slesarev.bookfinder.data.util.Response
 import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class FirebaseAuthServiceImpl(private val context: Context) : FirebaseAuthService {
 
@@ -195,8 +196,8 @@ class FirebaseAuthServiceImpl(private val context: Context) : FirebaseAuthServic
         }
     }
 
-    override suspend fun signInWithGoogle(token: String): Response<Event> {
-        return suspendCancellableCoroutine { continuation ->
+    override suspend fun signInWithGoogle(token: String): Event {
+        return suspendCoroutine { continuation ->
             val credential = GoogleAuthProvider.getCredential(token, null)
             Log.d(MY_TAG, "credential: $credential")
             Log.i(MY_TAG, "Before: FirebaseAuthServ.signInWithGoogle()")
@@ -205,12 +206,7 @@ class FirebaseAuthServiceImpl(private val context: Context) : FirebaseAuthServic
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful){
                         Log.d(MY_TAG, "FirebaseAuthServ.signInWithGoogle(): SUCCESS!")
-                        val isNewUser = task.result?.additionalUserInfo?.isNewUser
-                        if (isNewUser == true) {
-                            continuation.resume(Response.Success(Event.NEW_USER))
-                        } else {
-                            continuation.resume(Response.Success(Event.OLD_USER))
-                        }
+                        continuation.resumeWith(Result.success(Event.SUCCESS))
                     } else {
                         Log.d(MY_TAG, "FirebaseAuthServ.signInWithGoogle(): FAILURE!")
                         val exception = task.exception
@@ -218,42 +214,33 @@ class FirebaseAuthServiceImpl(private val context: Context) : FirebaseAuthServic
                             val errorCode = exception.errorCode
                             when (errorCode) {
                                 "ERROR_INVALID_CUSTOM_TOKEN" -> {
-                                    continuation.resume(Response.Error(Event.ERROR_INVALID_CUSTOM_TOKEN.toString()))
+                                    continuation.resumeWith(Result.success(Event.ERROR_INVALID_CUSTOM_TOKEN))
                                 }
 
                                 "ERROR_CUSTOM_TOKEN_MISMATCH" -> {
-                                    continuation.resume(Response.Error(Event.ERROR_CUSTOM_TOKEN_MISMATCH.toString()))
+                                    continuation.resumeWith(Result.success(Event.ERROR_CUSTOM_TOKEN_MISMATCH))
                                 }
 
                                 "ERROR_USER_MISMATCH" -> {
-                                    continuation.resume(Response.Error(Event.ERROR_USER_MISMATCH.toString()))
+                                    continuation.resumeWith(Result.success(Event.ERROR_USER_MISMATCH))
                                 }
 
                                 "ERROR_EMAIL_ALREADY_IN_USE" -> {
-                                    continuation.resume(Response.Error(Event.ERROR_EMAIL_ALREADY_IN_USE.toString()))
+                                    continuation.resumeWith(Result.success(Event.ERROR_EMAIL_ALREADY_IN_USE))
                                 }
 
                                 else -> {
-                                    continuation.resume(Response.Error(Event.ERROR_UNKNOWN.toString()))
+                                    continuation.resumeWith(Result.success(Event.ERROR_UNKNOWN))
                                 }
                             }
                         } else {
                             if (exception != null) {
                                 Log.d(MY_TAG, "FirebaseAuthServ.SingIn()-Exception: " + exception.message)
                             }
-                            continuation.resume(Response.Error(Event.ERROR_UNKNOWN.toString()))
+                            continuation.resumeWith(Result.success(Event.ERROR_UNKNOWN))
                         }
                     }
                 }
-
-            auth.currentUser?.getIdToken(true)?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val idToken = task.result.token
-                    // Используйте idToken для выполнения авторизованных запросов к Google Books API
-                } else {
-                    // Обработка ошибок
-                }
-            }
         }
     }
 

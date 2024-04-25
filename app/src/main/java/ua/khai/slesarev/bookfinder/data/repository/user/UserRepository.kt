@@ -7,11 +7,10 @@ import ua.khai.slesarev.bookfinder.data.util.Event
 import ua.khai.slesarev.bookfinder.data.util.Response
 
 interface UserRepository {
+    suspend fun addUser(user: User): Result<Unit>
+    suspend fun deleteAllUsers(user: User): Result<Unit>
+    suspend fun getAllUsers(): Result<List<User>>
 
-    var localDao: UserDao
-    suspend fun addUser(user: User): Response<Event>
-    suspend fun updateUser(user: User): Response<Event>
-    suspend fun deleteUser(user: User): Response<Event>
-    suspend fun getUserByUID(): Response<User>
+    suspend fun loadUserFromAPI(accessToken: String): Result<Unit>
 
 }

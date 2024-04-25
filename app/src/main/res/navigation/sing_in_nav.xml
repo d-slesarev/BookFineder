@@ -11,48 +11,8 @@
         android:label="frag_sing_in"
         tools:layout="@layout/frag_sing_in" >
         <action
-            android:id="@+id/action_singIn_to_singUp"
-            app:destination="@id/singUp"
-            app:enterAnim="@anim/from_right"
-            app:exitAnim="@anim/to_left"
-            app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/to_right" />
-        <action
-            android:id="@+id/action_singIn_to_passRecovery"
-            app:destination="@id/passRecovery"
-            app:enterAnim="@anim/from_right"
-            app:exitAnim="@anim/to_left"
-            app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/to_right" />
-        <action
             android:id="@+id/action_singIn_to_homeActivity"
             app:destination="@id/homeActivity" />
-    </fragment>
-    <fragment
-        android:id="@+id/singUp"
-        android:name="ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.SignUp.SingUp"
-        android:label="frag_sing_up"
-        tools:layout="@layout/frag_sing_up" >
-        <action
-            android:id="@+id/action_singUp_to_singIn"
-            app:destination="@id/singIn"
-            app:enterAnim="@anim/from_left"
-            app:exitAnim="@anim/to_right"
-            app:popEnterAnim="@anim/from_right"
-            app:popExitAnim="@anim/to_left" />
-    </fragment>
-    <fragment
-        android:id="@+id/passRecovery"
-        android:name="ua.khai.slesarev.bookfinder.ui.sign_in_screen.fragments.PassRecovery.PassRecovery"
-        android:label="frag_pass_recovery"
-        tools:layout="@layout/frag_pass_recovery" >
-        <action
-            android:id="@+id/action_passRecovery_to_singIn"
-            app:destination="@id/singIn"
-            app:enterAnim="@anim/from_left"
-            app:exitAnim="@anim/to_right"
-            app:popEnterAnim="@anim/from_right"
-            app:popExitAnim="@anim/to_left" />
     </fragment>
     <activity
         android:id="@+id/homeActivity"
