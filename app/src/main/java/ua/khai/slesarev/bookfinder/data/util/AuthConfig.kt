@@ -7,10 +7,10 @@ class AuthConfig {
         val SHARED_PREFERENCES_NAME = "AUTH_STATE_PREFERENCE"
         val AUTH_STATE = "AUTH_STATE"
 
-        val SCOPE_PROFILE = "profile"
+        val SCOPE_PROFILE = "https://www.googleapis.com/auth/userinfo.profile"
         val SCOPE_EMAIL = "email"
         val SCOPE_OPENID = "openid"
-        val SCOPE_BOOKS = "books"
+        val SCOPE_BOOKS = "https://www.googleapis.com/auth/books"
 
         val DATA_PICTURE = "picture"
         val DATA_FIRST_NAME = "given_name"
@@ -19,8 +19,6 @@ class AuthConfig {
 
         val CLIENT_ID = "292942742398-l5the5mgslvtqi7vquig0v05300k905g.apps.googleusercontent.com"
         val CLIENT_SECRET = "..."
-        val CODE_VERIFIER_CHALLENGE_METHOD = "S256"
-        val MESSAGE_DIGEST_ALGORITHM = "SHA-256"
 
         val RESPONSE_TYPE = ResponseTypeValues.CODE
 

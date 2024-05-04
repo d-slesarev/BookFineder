@@ -16,6 +16,7 @@ import ua.khai.slesarev.bookfinder.data.model.BookItem
 import ua.khai.slesarev.bookfinder.data.model.BookShelvesResponse
 import ua.khai.slesarev.bookfinder.data.remote.api.google_books.GoogleBooksAPI
 import ua.khai.slesarev.bookfinder.data.remote.api.google_books.RetrofitClientGB
+import ua.khai.slesarev.bookfinder.data.repository.authentication.appoauth.TokenStorage
 import kotlin.coroutines.resume
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import ua.khai.slesarev.bookfinder.data.util.getGroupTitles
@@ -26,7 +27,7 @@ import ua.khai.slesarev.bookfinder.data.util.getGroupTitles
 class BooksRepository(private val context: Context) {
 
     private val api: GoogleBooksAPI = RetrofitClientGB.instance
-    private val authorizationToken = "Bearer ${GoogleSignIn.getLastSignedInAccount(context)?.idToken}"
+    private val authorizationToken = "Bearer ${TokenStorage.accessToken}"
     private val apiKey = "AIzaSyAnaVw7WeDc4_keRzsSoEJkD7hE616BbWQ"
     private val homeGroupTitles: List<Pair<String, Any>> = getGroupTitles()
     private var auth: FirebaseAuth = Firebase.auth

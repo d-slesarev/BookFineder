@@ -9,10 +9,6 @@ import ua.khai.slesarev.bookfinder.data.remote.api.authentication.appoauth.OAuth
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 
 class OAuthRepository {
-    fun corruptAccessToken() {
-        TokenStorage.accessToken = "fake token"
-    }
-
     fun logout() {
         TokenStorage.accessToken = null
         TokenStorage.refreshToken = null

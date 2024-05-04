@@ -1,6 +1,7 @@
 package ua.khai.slesarev.bookfinder.data.remote.api.authentication.appoauth
 
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationRequest
@@ -13,7 +14,9 @@ import net.openid.appauth.GrantTypeValues
 import net.openid.appauth.ResponseTypeValues
 import net.openid.appauth.TokenRequest
 import ua.khai.slesarev.bookfinder.data.model.TokensModel
+import ua.khai.slesarev.bookfinder.data.repository.authentication.appoauth.TokenStorage
 import ua.khai.slesarev.bookfinder.data.util.AuthConfig
+import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import kotlin.coroutines.suspendCoroutine
 
 object OAuthManager {
@@ -35,12 +38,19 @@ object OAuthManager {
             AuthConfig.RESPONSE_TYPE,
             redirectUri
         )
-            .setScope(AuthConfig.SCOPE_PROFILE)
+            .setScopes(AuthConfig.SCOPE_PROFILE, AuthConfig.SCOPE_BOOKS, AuthConfig.SCOPE_EMAIL, AuthConfig.SCOPE_OPENID)
             .build()
     }
 
     fun getEndSessionRequest(): EndSessionRequest {
-        return EndSessionRequest.Builder(serviceConfiguration)
+        val configuration = AuthorizationServiceConfiguration(
+            Uri.parse(AuthConfig.URL_AUTHORIZATION),
+            Uri.parse(AuthConfig.URL_TOKEN_EXCHANGE),
+            null, // registration endpoint
+            Uri.parse(AuthConfig.URL_LOGOUT + "${TokenStorage.accessToken}")
+        )
+
+        return EndSessionRequest.Builder(configuration)
             .setPostLogoutRedirectUri(AuthConfig.URL_LOGOUT_REDIRECT.toUri())
             .build()
     }
@@ -51,6 +61,7 @@ object OAuthManager {
             AuthConfig.CLIENT_ID
         )
             .setGrantType(GrantTypeValues.REFRESH_TOKEN)
+            .setScope(AuthConfig.SCOPE_BOOKS)
             .setScope(AuthConfig.SCOPE_PROFILE)
             .setRefreshToken(refreshToken)
             .build()
@@ -70,6 +81,7 @@ object OAuthManager {
                             refreshToken = response.refreshToken.orEmpty(),
                             idToken = response.idToken.orEmpty()
                         )
+                        Log.d(MY_TAG, "performTokenRequestSuspend.idToken: ${response.idToken.orEmpty()}")
                         continuation.resumeWith(Result.success(tokens))
                     }
                     //получение токенов произошло неуспешно, показываем ошибку

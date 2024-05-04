@@ -8,7 +8,7 @@ import ua.khai.slesarev.bookfinder.data.util.Response
 
 interface UserRepository {
     suspend fun addUser(user: User): Result<Unit>
-    suspend fun deleteAllUsers(user: User): Result<Unit>
+    suspend fun deleteAllUsers(): Result<Unit>
     suspend fun getAllUsers(): Result<List<User>>
 
     suspend fun loadUserFromAPI(accessToken: String): Result<Unit>

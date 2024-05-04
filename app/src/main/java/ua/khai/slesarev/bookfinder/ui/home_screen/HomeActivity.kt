@@ -14,6 +14,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -46,6 +47,18 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var intent: Intent
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
 
+    private val logoutResponse = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if(result.resultCode == RESULT_OK) {
+            viewModel.webLogoutComplete()
+        } else {
+            // логаут отменен
+            // делаем complete тк github не редиректит после логаута и пользователь закрывает CCT
+            viewModel.webLogoutComplete()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -69,6 +82,8 @@ class HomeActivity : AppCompatActivity() {
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setupWithSearchBar(searchBar)
 
+        viewModel.getCurrentUser()
+
         viewModel.getCurrentUserSuccessFlow.launchAndCollectIn(this){
             val User = it.first()
 
@@ -76,6 +91,16 @@ class HomeActivity : AppCompatActivity() {
             userEmailText.text = User.email
             renderProfile(Uri.parse(User.imageUri), profileImage)
             renderSearchBarImage(Uri.parse(User.imageUri), searchBar)
+        }
+
+        viewModel.logoutPageFlow.launchAndCollectIn(this) {
+            logoutResponse.launch(it)
+        }
+
+        viewModel.logoutCompletedFlow.launchAndCollectIn(this) {
+            dialog.dismiss()
+            startActivity(intent)
+            finish()
         }
 
         closeBtn.setOnClickListener(object : View.OnClickListener {
@@ -87,12 +112,7 @@ class HomeActivity : AppCompatActivity() {
 
         signOutBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
-                lifecycleScope.launch {
-                    viewModel.singOut()
-                    dialog.dismiss()
-                    startActivity(intent)
-                    finish()
-                }
+                viewModel.signOut()
             }
         })
 
@@ -113,13 +133,11 @@ class HomeActivity : AppCompatActivity() {
 
                     true
                 }
-
                 else ->{
                     false
                 }
             }
         }
-
     }
 
     private fun renderProfileImage(resource:Drawable, searchTopBar: SearchBar) {
