@@ -1,6 +1,7 @@
 package ua.khai.slesarev.bookfinder.ui.home_screen
 
 import android.app.Application
+import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -26,40 +27,38 @@ import ua.khai.slesarev.bookfinder.data.repository.authentication.appoauth.OAuth
 import ua.khai.slesarev.bookfinder.data.repository.user.UserRepository
 import ua.khai.slesarev.bookfinder.data.repository.user.UserRepositoryImpl
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
+import ua.khai.slesarev.bookfinder.ui.util.END_SESSION_REQUEST_CODE
 
 class HomeActivityViewModel(application: Application) : AndroidViewModel(application) {
-
     private var auth: FirebaseAuth = Firebase.auth
-    private val authService: AuthorizationService = AuthorizationService(getApplication())
+    private val authService: AuthorizationService = AuthorizationService(application)
     private val authRepository = OAuthRepository()
     private val userRepo: UserRepository = UserRepositoryImpl(application)
-    private var authRepo: AuthRepository = AuthRepositoryImpl(application)
     private var defUser: List<User> = listOf(User(username = "Unknown Unknownson", email = "unknownson@unknown.com", imageUri = ""))
 
     private val getCurrentUserEventChannel = Channel<List<User>>(Channel.BUFFERED)
-    private val logoutPageEventChannel = Channel<Intent>(Channel.BUFFERED)
+    private val revokeTokenCompletedEventChannel = Channel<Unit>(Channel.BUFFERED)
     private val logoutCompletedEventChannel = Channel<Unit>(Channel.BUFFERED)
     val getCurrentUserSuccessFlow: Flow<List<User>>
         get() =  getCurrentUserEventChannel.receiveAsFlow()
-    val logoutPageFlow: Flow<Intent>
-        get() = logoutPageEventChannel.receiveAsFlow()
+
+    val revokeTokenCompletedFlow: Flow<Unit>
+        get() = revokeTokenCompletedEventChannel.receiveAsFlow()
 
     val logoutCompletedFlow: Flow<Unit>
         get() = logoutCompletedEventChannel.receiveAsFlow()
 
     fun signOut() {
-        val customTabsIntent = CustomTabsIntent.Builder().build()
-
-        val endSessionRequest = authRepository.getEndSessionRequest()
-
-        val logoutPageIntent = authService.getEndSessionRequestIntent(
-            endSessionRequest,
-            customTabsIntent
-        )
-
-        logoutPageEventChannel.trySendBlocking(logoutPageIntent)
-
-        Log.i(MY_TAG, "###. Open end session page: ${endSessionRequest.toUri()}")
+        Log.i(MY_TAG, "signOut(): Started!")
+        viewModelScope.launch{
+            runCatching {
+                authRepository.performEndSessionRequest()
+            }.onSuccess {
+                revokeTokenCompletedEventChannel.trySendBlocking(Unit)
+            }.onFailure {
+                revokeTokenCompletedEventChannel.trySendBlocking(Unit)
+            }
+        }
     }
 
     fun webLogoutComplete() {
@@ -71,12 +70,12 @@ class HomeActivityViewModel(application: Application) : AndroidViewModel(applica
                 logoutCompletedEventChannel.trySendBlocking(Unit)
             }.onFailure {
                 logoutCompletedEventChannel.trySendBlocking(Unit)
-                Log.d(MY_TAG, "HomeActViewModel.getCurrentUser-Exception: ${it.message}")
             }
         }
     }
 
     fun getCurrentUser() {
+        Log.d(MY_TAG, "HomeActivity.getCurrentUser(): Started!")
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 userRepo.getAllUsers()

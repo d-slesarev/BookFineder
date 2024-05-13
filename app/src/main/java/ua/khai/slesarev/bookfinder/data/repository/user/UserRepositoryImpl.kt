@@ -20,9 +20,9 @@ import kotlin.coroutines.suspendCoroutine
 
 class UserRepositoryImpl(private val context: Context): UserRepository {
 
-    private var userProfileAPI: GooglePeopleAPI = RetrofitClientGP.instance
-    private var localDatabase: BookFinderDatabase = BookFinderDatabase.getInstance(context)
-    private var localDao: UserDao = localDatabase.userDao()
+    private val userProfileAPI: GooglePeopleAPI = RetrofitClientGP.instance
+    private val localDatabase: BookFinderDatabase = BookFinderDatabase.getInstance(context)
+    private val localDao: UserDao = localDatabase.userDao()
     override suspend fun addUser(user: User): Result<Unit> {
         return try {
             localDao.insertUser(user)

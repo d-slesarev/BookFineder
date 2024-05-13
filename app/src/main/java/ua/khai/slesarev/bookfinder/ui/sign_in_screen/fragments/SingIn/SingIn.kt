@@ -79,6 +79,8 @@ class SingIn : Fragment() {
             viewModel.loadUserProfile()
         }
         viewModel.loadProfileSuccessFlow.launchAndCollectIn(viewLifecycleOwner) {
+            Log.d(MY_TAG, "SingIn Fragment: Before navigate to HomeActivity!")
+            onLoad(true)
             findNavController().navigate(R.id.action_singIn_to_homeActivity)
             requireActivity().finish()
         }

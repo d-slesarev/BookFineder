@@ -12,13 +12,7 @@ class AuthConfig {
         val SCOPE_OPENID = "openid"
         val SCOPE_BOOKS = "https://www.googleapis.com/auth/books"
 
-        val DATA_PICTURE = "picture"
-        val DATA_FIRST_NAME = "given_name"
-        val DATA_LAST_NAME = "family_name"
-        val DATA_EMAIL = "email"
-
         val CLIENT_ID = "292942742398-l5the5mgslvtqi7vquig0v05300k905g.apps.googleusercontent.com"
-        val CLIENT_SECRET = "..."
 
         val RESPONSE_TYPE = ResponseTypeValues.CODE
 
@@ -27,7 +21,5 @@ class AuthConfig {
 
         val URL_AUTH_REDIRECT = "ua.khai.slesarev.bookfinder:/oauth2callback"
         val URL_LOGOUT = "https://accounts.google.com/o/oauth2/revoke?token="
-
-        val URL_LOGOUT_REDIRECT = "ua.khai.slesarev.bookfinder:/logout"
     }
 }

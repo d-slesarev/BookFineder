@@ -1,5 +1,6 @@
 package ua.khai.slesarev.bookfinder.data.repository.authentication.appoauth
 
+import android.app.PendingIntent
 import android.util.Log
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationService
@@ -19,8 +20,10 @@ class OAuthRepository {
         return OAuthManager.getAuthRequest()
     }
 
-    fun getEndSessionRequest(): EndSessionRequest {
-        return OAuthManager.getEndSessionRequest()
+    suspend fun performEndSessionRequest(){
+        TokenStorage.accessToken?.let {
+            OAuthManager.performEndSessionRequest(it)
+        }
     }
 
     suspend fun performTokenRequest(

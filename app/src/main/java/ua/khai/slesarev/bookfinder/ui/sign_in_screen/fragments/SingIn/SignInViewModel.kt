@@ -32,12 +32,12 @@ import ua.khai.slesarev.bookfinder.data.repository.user.UserRepository
 import ua.khai.slesarev.bookfinder.data.repository.user.UserRepositoryImpl
 
 
-class SignInViewModel(private val application: Application) : AndroidViewModel(application) {
+class SignInViewModel(application: Application) : AndroidViewModel(application) {
 
     private val authHelper: AuthRepository = AuthRepositoryImpl(application)
     private val userRepo: UserRepository = UserRepositoryImpl(application)
     private val authRepository = OAuthRepository()
-    private val authService: AuthorizationService = AuthorizationService(getApplication())
+    private val authService: AuthorizationService = AuthorizationService(application)
 
     val uiState: MutableLiveData<UiState> = MutableLiveData()
     private val loadingMutableStateFlow = MutableStateFlow(true)
@@ -63,6 +63,7 @@ class SignInViewModel(private val application: Application) : AndroidViewModel(a
         get() = loadProfileSuccessEventChannel.receiveAsFlow()
 
     fun signInWithGoogle() {
+        loadingMutableStateFlow.value = false
         viewModelScope.launch {
             runCatching {
                 TokenStorage.idToken?.let {
@@ -71,23 +72,22 @@ class SignInViewModel(private val application: Application) : AndroidViewModel(a
             }.onSuccess {
                 firebaseAuthSuccessEventChannel.send(Unit)
             }.onFailure {
-                loadingMutableStateFlow.value = false
+                loadingMutableStateFlow.value = true
                 toastEventChannel.send(R.string.auth_canceled)
             }
         }
     }
 
     fun loadUserProfile(){
+        loadingMutableStateFlow.value = false
         viewModelScope.launch {
             runCatching {
                 TokenStorage.accessToken?.let {
                     userRepo.loadUserFromAPI(it)
                 }
             }.onSuccess {
-                loadingMutableStateFlow.value = false
                 loadProfileSuccessEventChannel.send(Unit)
             }.onFailure {
-                loadingMutableStateFlow.value = false
                 toastEventChannel.send(R.string.auth_canceled)
             }
         }
@@ -100,7 +100,7 @@ class SignInViewModel(private val application: Application) : AndroidViewModel(a
     fun onAuthCodeReceived(tokenRequest: TokenRequest) {
 
         Log.d(MY_TAG, "3. Received code = ${tokenRequest.authorizationCode}")
-        loadingMutableStateFlow.value = true
+        loadingMutableStateFlow.value = false
 
         viewModelScope.launch {
             runCatching {
@@ -112,7 +112,7 @@ class SignInViewModel(private val application: Application) : AndroidViewModel(a
             }.onSuccess {
                 tokenReceiptSuccessEventChannel.send(Unit)
             }.onFailure {
-                loadingMutableStateFlow.value = false
+                loadingMutableStateFlow.value = true
                 toastEventChannel.send(R.string.auth_canceled)
             }
         }

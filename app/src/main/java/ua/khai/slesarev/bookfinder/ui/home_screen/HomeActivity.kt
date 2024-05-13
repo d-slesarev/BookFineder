@@ -1,6 +1,7 @@
 package ua.khai.slesarev.bookfinder.ui.home_screen
 
 import android.app.Dialog
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -8,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Button
@@ -31,8 +33,10 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ua.khai.slesarev.bookfinder.R
+import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import ua.khai.slesarev.bookfinder.databinding.ActivityHomeBinding
 import ua.khai.slesarev.bookfinder.ui.sign_in_screen.SingInActivity
+import ua.khai.slesarev.bookfinder.ui.util.END_SESSION_REQUEST_CODE
 import ua.khai.slesarev.bookfinder.ui.util.launchAndCollectIn
 
 class HomeActivity : AppCompatActivity() {
@@ -47,30 +51,35 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var intent: Intent
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
 
-    private val logoutResponse = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if(result.resultCode == RESULT_OK) {
-            viewModel.webLogoutComplete()
-        } else {
-            // логаут отменен
-            // делаем complete тк github не редиректит после логаута и пользователь закрывает CCT
-            viewModel.webLogoutComplete()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == END_SESSION_REQUEST_CODE) {
+            val sessionStatus = data?.getStringExtra("session_status")
+            if (sessionStatus == "completed") {
+                // Выполнить блок кода при успешном завершении сессии
+                Log.d(MY_TAG, "HomeActivity.signOut: signOut!")
+                viewModel.webLogoutComplete()
+            } else {
+                // Выполнить блок кода при отмене завершения сессии
+                Log.d(MY_TAG, "HomeActivity.signOut: canceled!")
+                viewModel.webLogoutComplete()
+            }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(MY_TAG, "HomeActivity.onCreate(): Started!")
         setContentView(R.layout.activity_home)
         intent = Intent(this@HomeActivity, SingInActivity::class.java)
-        val homeProgressBar = binding.homeProgrBar
 
+        val homeProgressBar = binding.homeProgrBar
         val dialog = Dialog(this)
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.popup_dialog)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
 
         closeBtn = dialog.findViewById(R.id.backButton)
         signOutBtn = dialog.findViewById(R.id.signOutBtn)
@@ -86,15 +95,14 @@ class HomeActivity : AppCompatActivity() {
 
         viewModel.getCurrentUserSuccessFlow.launchAndCollectIn(this){
             val User = it.first()
-
             userNameText.text = User.username
             userEmailText.text = User.email
             renderProfile(Uri.parse(User.imageUri), profileImage)
             renderSearchBarImage(Uri.parse(User.imageUri), searchBar)
         }
 
-        viewModel.logoutPageFlow.launchAndCollectIn(this) {
-            logoutResponse.launch(it)
+        viewModel.revokeTokenCompletedFlow.launchAndCollectIn(this) {
+            viewModel.webLogoutComplete()
         }
 
         viewModel.logoutCompletedFlow.launchAndCollectIn(this) {
@@ -104,7 +112,6 @@ class HomeActivity : AppCompatActivity() {
         }
 
         closeBtn.setOnClickListener(object : View.OnClickListener {
-
             override fun onClick(view: View) {
                 dialog.dismiss()
             }
