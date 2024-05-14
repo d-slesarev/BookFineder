@@ -70,7 +70,7 @@ class BooksRepository(private val context: Context) {
     private suspend fun getNewestEbook() : BooksResponse<List<BookItem>> {
         return suspendCancellableCoroutine { continuation ->
             try {
-                api.getNewestEbook(apiKey).enqueue(object :
+                api.getNewestEbook(apiKey = apiKey).enqueue(object :
                     Callback<BookShelvesResponse> {
                     override fun onResponse(call: Call<BookShelvesResponse>, response: Response<BookShelvesResponse>) {
                         if (response.isSuccessful) {
@@ -104,7 +104,7 @@ class BooksRepository(private val context: Context) {
     private suspend fun getGenreList(genreQuery: String) : BooksResponse<List<BookItem>> {
         return suspendCancellableCoroutine { continuation ->
             try {
-                api.getGenreList(genreQuery, apiKey).enqueue(object :
+                api.getGenreList(genreQuery = genreQuery, apiKey = apiKey).enqueue(object :
                     Callback<BookShelvesResponse> {
                     override fun onResponse(call: Call<BookShelvesResponse>, response: Response<BookShelvesResponse>) {
                         if (response.isSuccessful) {
@@ -132,17 +132,6 @@ class BooksRepository(private val context: Context) {
                 }
             } catch (e: Exception){
                 Log.e(MY_TAG, "BooksRepository.getGenreList-Exception: ${e.message}")
-            }
-        }
-    }
-    private suspend fun getAccessToken(){
-
-        auth.getAccessToken(true)?.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val idToken = task.result.token
-                Log.e(MY_TAG, "AccessToken: $idToken")
-            } else {
-                Log.e(MY_TAG, "AccessToken: Error!")
             }
         }
     }
@@ -188,11 +177,6 @@ class BooksRepository(private val context: Context) {
             Log.e(MY_TAG, "BooksRepository.getHomeGroupContent-Exception: ${e.message}")
         }
 
-        Log.e(MY_TAG, "\ngroupsContent: ${groupsContent.values.size}\n")
-
-        getAccessToken()
-
-        Log.i(MY_TAG, "Before: RETURN!")
         return groupsContent
     }
 }

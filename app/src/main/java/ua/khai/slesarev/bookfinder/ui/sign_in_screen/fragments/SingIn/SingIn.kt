@@ -32,6 +32,7 @@ import androidx.browser.trusted.TokenStore
 import androidx.core.view.isVisible
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
+import ua.khai.slesarev.bookfinder.data.remote.api.authentication.appoauth.AuthStateManager
 import ua.khai.slesarev.bookfinder.data.repository.authentication.appoauth.TokenStorage
 import ua.khai.slesarev.bookfinder.ui.util.launchAndCollectIn
 import ua.khai.slesarev.bookfinder.ui.util.toast
@@ -92,12 +93,16 @@ class SingIn : Fragment() {
         // пытаемся получить запрос для обмена кода на токен, null - если произошла ошибка
         val tokenExchangeRequest = AuthorizationResponse.fromIntent(intent)
             ?.createTokenExchangeRequest()
+        val authResponse = AuthorizationResponse.fromIntent(intent)
+
         when {
             // авторизация завершались ошибкой
             exception != null -> viewModel.onAuthCodeFailed(exception)
             // авторизация прошла успешно, меняем код на токен
             tokenExchangeRequest != null ->
-                viewModel.onAuthCodeReceived(tokenExchangeRequest)
+                authResponse?.let {
+                    viewModel.onAuthCodeReceived(tokenExchangeRequest, it)
+                }
         }
     }
 

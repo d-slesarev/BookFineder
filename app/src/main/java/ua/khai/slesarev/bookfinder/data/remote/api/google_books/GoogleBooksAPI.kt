@@ -25,7 +25,8 @@ interface GoogleBooksAPI {
         @Query("q") query: String = "ebook",
         @Query("orderBy") orderBy: String = "newest",
         @Query("maxResults") maxResults: Int = 20,
-        @Query("fields") fields: String = "items(volumeInfo(title,authors,imageLinks(thumbnail)))"
+        @Query("fields") fields: String = "items(volumeInfo(title,authors,imageLinks(thumbnail)))",
+        @Query("filter") filter: String = "partial"
     ): Call<BookShelvesResponse>
 
     @GET("books/v1/volumes")
@@ -33,6 +34,7 @@ interface GoogleBooksAPI {
         @Query("q") genreQuery: String,
         @Query("key") apiKey: String,
         @Query("fields") fields: String = "items(volumeInfo(title,authors,imageLinks(thumbnail)))",
-        @Query("maxResults") maxResults: Int = 20
+        @Query("maxResults") maxResults: Int = 20,
+        @Query("filter") filter: String = "partial"
     ): Call<BookShelvesResponse>
 }

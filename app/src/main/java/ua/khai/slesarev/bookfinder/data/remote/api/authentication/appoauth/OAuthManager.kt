@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.net.toUri
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationRequest
+import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ClientAuthentication
@@ -26,6 +27,7 @@ import kotlin.coroutines.suspendCoroutine
 object OAuthManager {
 
     private val logoutService: OpenIDLogoutService = RetrofitClientLO.instance
+    private val stateManager: AuthStateManager = AuthStateManager.getInstance()
 
     private val serviceConfiguration = AuthorizationServiceConfiguration(
         Uri.parse(AuthConfig.URL_AUTHORIZATION),
@@ -96,28 +98,26 @@ object OAuthManager {
     suspend fun performTokenRequestSuspend(
         authService: AuthorizationService,
         tokenRequest: TokenRequest,
+        authResponse: AuthorizationResponse
     ): TokensModel {
         return suspendCoroutine { continuation ->
-            authService.performTokenRequest(tokenRequest) { response, ex ->
+            authService.performTokenRequest(tokenRequest) { tokenResponse, tokenEx ->
+                stateManager.authState = AuthState(authResponse, tokenResponse, tokenEx)
+                Log.i(MY_TAG, "authState\naccessToken: ${stateManager.authState.accessToken}\nidToken: ${stateManager.authState.idToken}\nrefreshToken: ${stateManager.authState.refreshToken}")
                 when {
-                    response != null -> {
+                    tokenResponse != null -> {
                         //получение токена произошло успешно
                         val tokens = TokensModel(
-                            accessToken = response.accessToken.orEmpty(),
-                            refreshToken = response.refreshToken.orEmpty(),
-                            idToken = response.idToken.orEmpty()
-                        )
-                        Log.d(
-                            MY_TAG,
-                            "performTokenRequestSuspend.idToken: ${response.idToken.orEmpty()}"
+                            accessToken = tokenResponse.accessToken.orEmpty(),
+                            refreshToken = tokenResponse.refreshToken.orEmpty(),
+                            idToken = tokenResponse.idToken.orEmpty()
                         )
                         continuation.resumeWith(Result.success(tokens))
                     }
                     //получение токенов произошло неуспешно, показываем ошибку
-                    ex != null -> {
-                        continuation.resumeWith(Result.failure(ex))
+                    tokenEx != null -> {
+                        continuation.resumeWith(Result.failure(tokenEx))
                     }
-
                     else -> error("unreachable")
                 }
             }

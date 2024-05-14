@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.TokenRequest
 import kotlinx.coroutines.flow.receiveAsFlow
+import net.openid.appauth.AuthorizationResponse
 import ua.khai.slesarev.bookfinder.R
 import ua.khai.slesarev.bookfinder.data.repository.authentication.appoauth.TokenStorage
 import ua.khai.slesarev.bookfinder.data.repository.user.UserRepository
@@ -97,7 +98,7 @@ class SignInViewModel(application: Application) : AndroidViewModel(application) 
 
     }
 
-    fun onAuthCodeReceived(tokenRequest: TokenRequest) {
+    fun onAuthCodeReceived(tokenRequest: TokenRequest, authResponse: AuthorizationResponse) {
 
         Log.d(MY_TAG, "3. Received code = ${tokenRequest.authorizationCode}")
         loadingMutableStateFlow.value = false
@@ -107,7 +108,8 @@ class SignInViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d(MY_TAG, "4. Change code to token. Url = ${tokenRequest.configuration.tokenEndpoint}, verifier = ${tokenRequest.codeVerifier}")
                 authRepository.performTokenRequest(
                     authService = authService,
-                    tokenRequest = tokenRequest
+                    tokenRequest = tokenRequest,
+                    authResponse = authResponse
                 )
             }.onSuccess {
                 tokenReceiptSuccessEventChannel.send(Unit)

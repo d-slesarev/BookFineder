@@ -14,7 +14,7 @@ val homeGroupTitles: List<Pair<String, Any>> = listOf(
     "1" to "Недавно просмотренно",
     "2" to "Новые электронные книги",
     "3" to Pair("Триллеры", "subject:thriller"),
-    "4" to Pair("Детектив", "subject:detective"),
+    "4" to Pair("Детектив", "subject:mystery"),
     "5" to Pair("Любовные романы", "subject:romance"),
     "6" to Pair("Самосовершенствование", "subject:self-perfection"),
     "7" to Pair("Художественная литература", "subject:fiction"),

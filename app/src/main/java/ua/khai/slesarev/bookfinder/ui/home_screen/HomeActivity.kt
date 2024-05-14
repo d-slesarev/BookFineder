@@ -51,23 +51,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var intent: Intent
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == END_SESSION_REQUEST_CODE) {
-            val sessionStatus = data?.getStringExtra("session_status")
-            if (sessionStatus == "completed") {
-                // Выполнить блок кода при успешном завершении сессии
-                Log.d(MY_TAG, "HomeActivity.signOut: signOut!")
-                viewModel.webLogoutComplete()
-            } else {
-                // Выполнить блок кода при отмене завершения сессии
-                Log.d(MY_TAG, "HomeActivity.signOut: canceled!")
-                viewModel.webLogoutComplete()
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(MY_TAG, "HomeActivity.onCreate(): Started!")
