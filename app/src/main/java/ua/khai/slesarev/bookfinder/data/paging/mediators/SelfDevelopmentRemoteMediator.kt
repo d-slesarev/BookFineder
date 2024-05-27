@@ -56,9 +56,11 @@ class SelfDevelopmentRemoteMediator (
         }
 
         return try {
-            var index: Int = if (loadType == LoadType.REFRESH) 1 else state.lastItemOrNull()!!.id
+            var index: Int = if (loadType == LoadType.REFRESH) 1
+            else state.lastItemOrNull()!!.id
 
-            Log.d(MY_TAG, "API Call IN SelfDevelopmentRemoteMediator: Started!\nStartIndex = ${page}\n" +
+            Log.d(MY_TAG, "API Call IN SelfDevelopmentRemoteMediator: Started!\n" +
+                    "StartIndex = ${page}\n" +
                     "loadType = ${loadType.name}")
 
             val list: List<BookItem> = apiService.performGoogleBooksRequest(
@@ -114,8 +116,8 @@ class SelfDevelopmentRemoteMediator (
 
     companion object PreferencesHelper {
 
-        private const val PREFS_NAME = "book_prefs"
-        private const val KEY_CURRENT_POSITION = "current_position"
+        private const val PREFS_NAME = "self_development_book_prefs"
+        private const val KEY_CURRENT_POSITION = "self_development_current_position"
 
         private fun getPreferences(context: Context): SharedPreferences {
             return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

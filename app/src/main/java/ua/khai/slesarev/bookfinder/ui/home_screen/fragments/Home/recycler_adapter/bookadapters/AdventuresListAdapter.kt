@@ -20,7 +20,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.DataSource
 import ua.khai.slesarev.bookfinder.data.models.local.books.AdventuresBook
 
-class AdventuresListAdapter  :
+class AdventuresListAdapter :
     PagingDataAdapter<AdventuresBook, AdventuresListAdapter.AdventuresBookHolder>(AdventuresBookComparator) {
     class AdventuresBookHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         private val bookTitle: TextView = itemView.findViewById(R.id.bookTitle)

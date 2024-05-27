@@ -1,5 +1,7 @@
 package ua.khai.slesarev.bookfinder.data.paging.mediators
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -19,6 +21,7 @@ import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)
 class FantasyRemoteMediator (
+    private val context: Context,
     private val typeCall: TypeCall,
     private val apiService: BooksService,
     private val bookDatabase: BookFinderDatabase
@@ -32,19 +35,25 @@ class FantasyRemoteMediator (
         state: PagingState<Int, FantasyBook>
     ): MediatorResult {
         val page = when (loadType) {
-            LoadType.REFRESH -> 0
+            LoadType.REFRESH -> {
+                resetCurrentPosition(context)
+                0
+            }
             LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
             LoadType.APPEND -> { // TODO: Выясни почему после REFRESH выполняется APPEND и по многу раз...
                 val lastItem  = state.lastItemOrNull()
                 if (lastItem  == null) {
                     return MediatorResult.Success(endOfPaginationReached = true)
                 }
-                lastItem.id
+                val currentPosition = getCurrentPosition(context) + 20
+                setCurrentPosition(context, currentPosition)
+                currentPosition
             }
         }
 
         return try {
-            var index: Int = if (loadType == LoadType.REFRESH) 1 else page
+            var index: Int = if (loadType == LoadType.REFRESH) 1
+            else state.lastItemOrNull()!!.id
 
             Log.d(MY_TAG, "API Call IN FantasyRemoteMediator: Started!\n" +
                     "StartIndex = ${page}\n" +
@@ -60,8 +69,14 @@ class FantasyRemoteMediator (
                 item.volumeInfo.imageLinks?.thumbnail != null
             } ?: emptyList()
 
-            val books:List<FantasyBook> = if (list.isNotEmpty()){
-                list.map  {
+            val clearList = list.distinctBy {
+                it.volumeInfo!!.title.toString()
+            }.distinctBy {
+                it.volumeInfo!!.imageLinks!!.thumbnail.toString()
+            }
+
+            val books:List<FantasyBook> = if (clearList.isNotEmpty()){
+                clearList.map  {
                     it.volumeInfo?.title?.let { it1 ->
                         it.volumeInfo.authors?.let { it2 ->
                             it.volumeInfo.imageLinks?.thumbnail?.let { it3 ->
@@ -96,6 +111,28 @@ class FantasyRemoteMediator (
         } catch (e: HttpException) {
             Log.e(MY_TAG, "FantasyRemoteMediator-Exception: ${e.message}")
             return MediatorResult.Error(e)
+        }
+    }
+
+    companion object PreferencesHelper {
+
+        private const val PREFS_NAME = "fantasy_book_prefs"
+        private const val KEY_CURRENT_POSITION = "fantasy_current_position"
+
+        private fun getPreferences(context: Context): SharedPreferences {
+            return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        }
+
+        fun getCurrentPosition(context: Context): Int {
+            return getPreferences(context).getInt(KEY_CURRENT_POSITION, 1) // Default position is 1
+        }
+
+        fun setCurrentPosition(context: Context, position: Int) {
+            getPreferences(context).edit().putInt(KEY_CURRENT_POSITION, position).apply()
+        }
+
+        fun resetCurrentPosition(context: Context) {
+            setCurrentPosition(context, 1)
         }
     }
 }

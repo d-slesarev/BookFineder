@@ -67,11 +67,6 @@ class HomeFragmentViewModel(private val application: Application) : AndroidViewM
     private val service: BooksService = BooksService()
     private val database = BookFinderDatabase.getInstance()
 
-    private val _loadingStates = MutableStateFlow(0)
-    val loadingStates: StateFlow<Int> = _loadingStates
-    private val _uiState = MutableStateFlow("Success!")
-    val uiState: StateFlow<String> = _uiState
-
     lateinit var RecentFlow: Flow<PagingData<RecentBook>>
     lateinit var AdventuresFlow: Flow<PagingData<AdventuresBook>>
     lateinit var ThrillersFlow: Flow<PagingData<ThrillersBook>>
@@ -101,7 +96,7 @@ class HomeFragmentViewModel(private val application: Application) : AndroidViewM
                     try {
                         val (flow, remoteMediatorFlow) = createFlow(
                             { database.RecentBookDao().getAllBooks() as PagingSource<Int, RecentBook> },
-                            RecentRemoteMediator(config.typeCallAPI, service, database)
+                            RecentRemoteMediator(application, config.typeCallAPI, service, database)
                         )
                         RecentFlow = flow
                         remoteMediatorResults.add(remoteMediatorFlow)
@@ -114,7 +109,7 @@ class HomeFragmentViewModel(private val application: Application) : AndroidViewM
                     try {
                         val (flow, remoteMediatorFlow) = createFlow(
                             { database.AdventuresBookDao().getAllBooks() as PagingSource<Int, AdventuresBook> },
-                            AdventuresRemoteMediator(config.typeCallAPI, service, database)
+                            AdventuresRemoteMediator(application, config.typeCallAPI, service, database)
                         )
                         AdventuresFlow = flow
                         remoteMediatorResults.add(remoteMediatorFlow)
@@ -127,7 +122,7 @@ class HomeFragmentViewModel(private val application: Application) : AndroidViewM
                     try {
                         val (flow, remoteMediatorFlow) = createFlow(
                             { database.ThrillersBookDao().getAllBooks() as PagingSource<Int, ThrillersBook> },
-                            ThrillersRemoteMediator(config.typeCallAPI, service, database)
+                            ThrillersRemoteMediator(application, config.typeCallAPI, service, database)
                         )
                         ThrillersFlow = flow
                         remoteMediatorResults.add(remoteMediatorFlow)
@@ -140,7 +135,7 @@ class HomeFragmentViewModel(private val application: Application) : AndroidViewM
                     try {
                         val (flow, remoteMediatorFlow) = createFlow(
                             { database.MysteryBookDao().getAllBooks() as PagingSource<Int, MysteryBook> },
-                            MysteryRemoteMediator(config.typeCallAPI, service, database)
+                            MysteryRemoteMediator(application, config.typeCallAPI, service, database)
                         )
                         MysteryFlow = flow
                         remoteMediatorResults.add(remoteMediatorFlow)
@@ -153,7 +148,7 @@ class HomeFragmentViewModel(private val application: Application) : AndroidViewM
                     try {
                         val (flow, remoteMediatorFlow) = createFlow(
                             { database.FantasyBookDao().getAllBooks() as PagingSource<Int, FantasyBook> },
-                            FantasyRemoteMediator(config.typeCallAPI, service, database)
+                            FantasyRemoteMediator(application, config.typeCallAPI, service, database)
                         )
                         FantasyFlow = flow
                         remoteMediatorResults.add(remoteMediatorFlow)
@@ -166,7 +161,7 @@ class HomeFragmentViewModel(private val application: Application) : AndroidViewM
                     try {
                         val (flow, remoteMediatorFlow) = createFlow(
                             { database.RomanceBookDao().getAllBooks() as PagingSource<Int, RomanceBook> },
-                            RomanceRemoteMediator(config.typeCallAPI, service, database)
+                            RomanceRemoteMediator(application, config.typeCallAPI, service, database)
                         )
                         RomanceFlow = flow
                         remoteMediatorResults.add(remoteMediatorFlow)
@@ -192,7 +187,7 @@ class HomeFragmentViewModel(private val application: Application) : AndroidViewM
                     try {
                         val (flow, remoteMediatorFlow) = createFlow(
                             pagingSourceFactory = { database.FictionBookDao().getAllBooks() as PagingSource<Int, FictionBook> },
-                            remoteMediator = FictionRemoteMediator(config.typeCallAPI, service, database)
+                            remoteMediator = FictionRemoteMediator(application, config.typeCallAPI, service, database)
                         )
                         FictionFlow = flow
                         remoteMediatorResults.add(remoteMediatorFlow)

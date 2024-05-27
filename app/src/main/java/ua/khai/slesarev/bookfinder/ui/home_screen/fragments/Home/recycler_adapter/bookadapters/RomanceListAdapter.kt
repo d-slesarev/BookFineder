@@ -32,6 +32,7 @@ class RomanceListAdapter :
 
         private val presentBookCover: LinearLayout = itemView.findViewById(R.id.presentBookCover)
         private val loadingBookCover: ShimmerFrameLayout = itemView.findViewById(R.id.loadingBookCover)
+
         fun bindBook(item: RomanceBook) {
             presentBookCover.visibility = View.GONE
             loadingBookCover.visibility = View.VISIBLE
