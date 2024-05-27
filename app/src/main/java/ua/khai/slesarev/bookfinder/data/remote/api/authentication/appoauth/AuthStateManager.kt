@@ -19,7 +19,7 @@ class AuthStateManager private constructor(context: Context) {
         private var INSTANCE: AuthStateManager? = null
 
         fun init(context: Context) {
-            Log.d(MY_TAG, "AuthStateManager.init(): Activated!")
+            Log.i(MY_TAG, "AuthStateManager.init(): Activated!")
             if (INSTANCE == null) {
                 synchronized(this) {
                     if (INSTANCE == null) {
@@ -30,7 +30,7 @@ class AuthStateManager private constructor(context: Context) {
         }
 
         fun getInstance(): AuthStateManager {
-            Log.d(MY_TAG, "AuthStateManager.getInstance(): Activated!")
+            Log.i(MY_TAG, "AuthStateManager.getInstance(): Activated!")
             return INSTANCE ?: throw IllegalStateException("AuthStateManager is not initialized, call init(context) first")
         }
 
@@ -44,9 +44,11 @@ class AuthStateManager private constructor(context: Context) {
         get() = readAuthState()
         set(value) = preferences.edit().putString(AUTH_STATE_KEY, value.jsonSerializeString()).apply()
 
+    val authService: AuthorizationService
+
     init {
         authState = readAuthState()
-        authState.accessTokenExpirationTime
+        authService = AuthorizationService(context)
     }
 
     private fun readAuthState(): AuthState {
@@ -63,10 +65,11 @@ class AuthStateManager private constructor(context: Context) {
         }
     }
 
-    suspend fun getAccessToken(authService: AuthorizationService): String? {
+    suspend fun getAccessToken(): String? {
         return if (authState.isAuthorized) {
             if (authState.needsTokenRefresh) {
-                refreshAccessToken(authService)
+                Log.d(MY_TAG, "AuthStateManager.refreshAccessToken(): Started!")
+                refreshAccessToken()
             } else {
                 authState.accessToken
             }
@@ -75,13 +78,17 @@ class AuthStateManager private constructor(context: Context) {
         }
     }
 
-    private suspend fun refreshAccessToken(authService: AuthorizationService): String? {
+     suspend fun refreshAccessToken(): String? {
         return suspendCancellableCoroutine { continuation ->
             authState.performActionWithFreshTokens(authService) { accessToken, idToken, ex ->
-                if (ex != null) {
-                    continuation.resumeWithException(ex)
+                if (ex == null) {
+                    accessToken?.let {
+                        continuation.resume(it)
+                    } ?: continuation.resume(null)
+                    Log.d(MY_TAG, "AuthStateManager.refreshAccessToken(): SUCCESS!\nNewAccessToken: $accessToken")
                 } else {
-                    authState.accessToken?.let { continuation.resume(it) } ?: continuation.resume(null)
+                    Log.d(MY_TAG, "AuthStateManager.refreshAccessToken(): FAILURE!\nMessage: ${ex.message}")
+                    continuation.resumeWithException(ex)
                 }
             }
         }

@@ -3,12 +3,8 @@ package ua.khai.slesarev.bookfinder.data.repository.authentication
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import ua.khai.slesarev.bookfinder.data.local.database.BookFinderDatabase
-import ua.khai.slesarev.bookfinder.data.local.database.dao.UserDao
-import ua.khai.slesarev.bookfinder.data.model.User
+import ua.khai.slesarev.bookfinder.data.local.database.dao.user.UserDao
 import ua.khai.slesarev.bookfinder.data.remote.api.authentication.googlesingin.FirebaseAuthService
 import ua.khai.slesarev.bookfinder.data.remote.api.authentication.googlesingin.impl.FirebaseAuthServiceImpl
 import ua.khai.slesarev.bookfinder.data.repository.user.UserRepository
@@ -16,13 +12,12 @@ import ua.khai.slesarev.bookfinder.data.repository.user.UserRepositoryImpl
 import ua.khai.slesarev.bookfinder.data.util.Event
 import ua.khai.slesarev.bookfinder.data.util.Response
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
-import ua.khai.slesarev.bookfinder.data.util.getDefaultProfileImage
 
 class AuthRepositoryImpl(private val context: Context) : AuthRepository {
 
     private val auth: FirebaseAuthService = FirebaseAuthServiceImpl(context)
     private val userRepo: UserRepository = UserRepositoryImpl(context)
-    private var localDatabase: BookFinderDatabase = BookFinderDatabase.getInstance(context)
+    private var localDatabase: BookFinderDatabase = BookFinderDatabase.getInstance()
     private var localDao: UserDao = localDatabase.userDao()
 
     override fun signOut(): Response<Event> {

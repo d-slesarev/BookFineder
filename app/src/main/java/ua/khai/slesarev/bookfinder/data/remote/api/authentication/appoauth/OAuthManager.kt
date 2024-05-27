@@ -1,6 +1,5 @@
 package ua.khai.slesarev.bookfinder.data.remote.api.authentication.appoauth
 
-import android.app.PendingIntent
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
@@ -9,16 +8,11 @@ import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
-import net.openid.appauth.ClientAuthentication
-import net.openid.appauth.ClientSecretPost
-import net.openid.appauth.EndSessionRequest
 import net.openid.appauth.GrantTypeValues
-import net.openid.appauth.ResponseTypeValues
 import net.openid.appauth.TokenRequest
-import ua.khai.slesarev.bookfinder.data.model.TokensModel
+import ua.khai.slesarev.bookfinder.data.models.local.TokensModel
 import ua.khai.slesarev.bookfinder.data.remote.api.authentication.logout.OpenIDLogoutService
 import ua.khai.slesarev.bookfinder.data.remote.api.authentication.logout.RetrofitClientLO
-import ua.khai.slesarev.bookfinder.data.repository.authentication.appoauth.TokenStorage
 import ua.khai.slesarev.bookfinder.data.util.AuthConfig
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import kotlin.coroutines.resume

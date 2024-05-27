@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import net.openid.appauth.AuthorizationService
-import ua.khai.slesarev.bookfinder.data.model.User
+import ua.khai.slesarev.bookfinder.data.models.local.User
 import ua.khai.slesarev.bookfinder.data.remote.api.authentication.appoauth.AuthStateManager
 import ua.khai.slesarev.bookfinder.data.repository.authentication.appoauth.OAuthRepository
 import ua.khai.slesarev.bookfinder.data.repository.user.UserRepository
 import ua.khai.slesarev.bookfinder.data.repository.user.UserRepositoryImpl
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 
-class HomeActivityViewModel(application: Application) : AndroidViewModel(application) {
+class HomeActivityViewModel(private val application: Application) : AndroidViewModel(application) {
     private val authService: AuthorizationService = AuthorizationService(application)
     private val authRepo = OAuthRepository()
     private val authState: AuthStateManager = AuthStateManager.getInstance()

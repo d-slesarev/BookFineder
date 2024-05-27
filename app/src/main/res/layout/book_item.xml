@@ -30,14 +30,16 @@
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:id="@+id/presentBookCover"
+                android:visibility="visible">
 
             <ImageView
+                    android:id="@+id/bookCover"
+                    android:src="@drawable/error_loading_image"
                     android:layout_width="210dp"
                     android:layout_height="323dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/unnamed210"
-                    android:id="@+id/bookCover"
                     android:layout_marginRight="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp" />
@@ -46,7 +48,7 @@
                   если название заголовка книги слишком большое-->
 
             <TextView
-                    android:text="Тана Френч"
+                    android:text=""
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/bookTitle"
@@ -60,7 +62,7 @@
                     android:paddingTop="5dp" />
 
             <TextView
-                    android:text="Тана Френч"
+                    android:text=""
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/bookAuthor"
@@ -71,5 +73,57 @@
                     android:paddingBottom="8dp"
                     android:paddingTop="4dp" />
         </LinearLayout>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/loadingBookCover"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbarFadeDuration="800"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textAlignment="center"
+                        android:baselineAligned="false"
+                        android:gravity="center">
+
+                    <ImageView
+                            android:layout_width="210dp"
+                            android:layout_height="323dp"
+                            android:scaleType="centerInside"
+                            android:background="#C3C3C3"
+                            android:id="@+id/shimmerBookCover"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp" />
+
+
+                    <TextView
+                            android:layout_width="105dp"
+                            android:layout_height="28dp"
+                            android:id="@+id/shimmerBookTitle"
+                            android:fontFamily="sans-serif"
+                            android:textSize="13sp"
+                            android:textStyle="bold|italic"
+                            android:background="#C3C3C3"
+                            android:textAlignment="center"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="5dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="8dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
     </androidx.cardview.widget.CardView>
 </LinearLayout>

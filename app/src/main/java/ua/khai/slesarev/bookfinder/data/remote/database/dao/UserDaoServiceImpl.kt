@@ -9,7 +9,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.suspendCancellableCoroutine
-import ua.khai.slesarev.bookfinder.data.model.UserRemote
+import ua.khai.slesarev.bookfinder.data.models.remote.user.UserRemote
 import ua.khai.slesarev.bookfinder.data.remote.database.service.UserDaoService
 import ua.khai.slesarev.bookfinder.data.util.Event
 import ua.khai.slesarev.bookfinder.data.util.Response

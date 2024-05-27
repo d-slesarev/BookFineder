@@ -3,8 +3,7 @@ package ua.khai.slesarev.bookfinder.data.remote.api.user_profile
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
-import ua.khai.slesarev.bookfinder.data.model.Person
-import ua.khai.slesarev.bookfinder.data.model.User
+import ua.khai.slesarev.bookfinder.data.models.remote.profile.Person
 
 // TODO: Реализовать сервис доступа к данным профиля аккаунта пользователя
 interface GooglePeopleAPI {

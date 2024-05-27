@@ -32,4 +32,25 @@
     <string name="many_requests_message">We\'ve temporarily blocked your account for security reasons due to too frequent requests. Please contact support with this problem.</string>
     <string name="auth_canceled">Unknown Error. Try again after some time</string>
 
+    // Для названий полок HomeScreen
+
+    <string name="recently_viewed">Недавно просмотренные</string>
+    <string name="adventures">Приключения</string>
+    <string name="thrillers">Триллеры</string>
+    <string name="mystery">Мистика</string>
+    <string name="fantasy">Фантастика</string>
+    <string name="romance">Романтика</string>
+    <string name="self_development">Саморазвитие</string>
+    <string name="fiction">Художественная литература</string>
+
+    // Список тегов для поиска книг в Google Books API
+
+    <string name="adventures_tags">Adventure OR Exploration OR Quest OR Expedition OR Journey OR Voyage OR Discovery OR Heroic OR Survival OR Action OR Thrill OR Danger OR Treasure hunt OR Escape OR Mystery OR Exploration OR Wilderness OR Epic OR Legend OR Saga</string>
+    <string name="thrillers_tags">Thriller OR Suspense OR Crime OR Mystery OR Psychological OR Conspiracy OR Espionage OR Tension OR Murder OR Investigation OR Chase OR Terror OR Dark OR Intrigue OR Danger OR Plot twist OR Kidnapping OR Serial killer OR Cliffhanger OR Secret</string>
+    <string name="mystery_tags">Mysticism OR Supernatural OR Paranormal OR Occult OR Spiritual OR Magic OR Witchcraft OR Ghosts OR Haunted OR Esoteric OR Sorcery OR Divination OR Alchemy OR Enigma OR Mystery OR Dark arts OR Seance OR Phantom OR Astral OR Mystical</string>
+    <string name="fantasy_tags">Science fiction OR Sci-fi OR Future OR Space OR Aliens OR Robots OR Artificial intelligence OR Time travel OR Dystopia OR Utopia OR Cyberpunk OR Steampunk OR Parallel universes OR Extraterrestrial OR Galactic OR Apocalyptic OR Post-apocalyptic</string>
+    <string name="romance_tags">Romance OR Love OR Passion OR Romantic OR Affection OR Heartfelt OR Soulmates OR Intimacy OR Love story OR Devotion OR Couple OR Heartwarming OR Sweethearts OR Emotional OR Relationship OR Wedding OR Engagement OR Love affair OR Sentimental OR Heartthrob</string>
+    <string name="self_development_tags">Self-improvement OR Personal growth OR Motivation OR Success OR Productivity OR Mindfulness OR Habits OR Goal setting OR Time management OR Confidence OR Wellness OR Life skills OR Positive thinking OR Emotional intelligence OR Leadership</string>
+    <string name="fiction_tags">Fiction OR Literary OR Novel OR Storytelling OR Narrative OR Prose OR Plot OR Character-driven OR Drama OR Suspense OR Mystery OR Romance OR Historical fiction OR Contemporary fiction OR Fantasy OR Science fiction OR Thriller OR Crime OR Adventure</string>
+
 </resources>

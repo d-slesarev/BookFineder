@@ -1,6 +1,6 @@
 package ua.khai.slesarev.bookfinder.data.remote.database.service
 
-import ua.khai.slesarev.bookfinder.data.model.UserRemote
+import ua.khai.slesarev.bookfinder.data.models.remote.user.UserRemote
 import ua.khai.slesarev.bookfinder.data.util.Event
 import ua.khai.slesarev.bookfinder.data.util.Response
 

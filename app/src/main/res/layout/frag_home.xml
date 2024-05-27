@@ -8,7 +8,7 @@
     tools:context=".ui.home_screen.fragments.Home.HomeScreen">
 
     <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmer_view_container"
+            android:id="@+id/loadingBookCover"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbarFadeDuration="800"

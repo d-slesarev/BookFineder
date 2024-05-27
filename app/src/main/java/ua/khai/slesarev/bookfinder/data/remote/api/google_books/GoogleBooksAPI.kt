@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
-import ua.khai.slesarev.bookfinder.data.model.BookShelvesResponse
+import ua.khai.slesarev.bookfinder.data.models.remote.book.BookShelvesResponse
 
 interface GoogleBooksAPI {
     @GET("books/v1/volumes")
@@ -14,9 +14,11 @@ interface GoogleBooksAPI {
     @GET("books/v1/mylibrary/bookshelves/{shelf}/volumes")
     fun getBooksShelves(
         @Header("Authorization") authorization: String,
-        @Path("shelf") shelfId: Int = 7,
+        @Path("shelf") shelfId: Int,
         @Query("key") apiKey: String,
-        @Query("fields") fields: String = "items(volumeInfo(title,authors,imageLinks(thumbnail)))"
+        @Query("fields") fields: String = "items(volumeInfo(title,authors,imageLinks(thumbnail)))",
+        @Query("startIndex") startIndex: Int,
+        @Query("maxResults") maxResults: Int
     ): Call<BookShelvesResponse>
 
     @GET("books/v1/volumes")
@@ -34,7 +36,8 @@ interface GoogleBooksAPI {
         @Query("q") genreQuery: String,
         @Query("key") apiKey: String,
         @Query("fields") fields: String = "items(volumeInfo(title,authors,imageLinks(thumbnail)))",
-        @Query("maxResults") maxResults: Int = 20,
-        @Query("filter") filter: String = "partial"
+        @Query("filter") filter: String = "partial",
+        @Query("startIndex") startIndex: Int,
+        @Query("maxResults") maxResults: Int
     ): Call<BookShelvesResponse>
 }

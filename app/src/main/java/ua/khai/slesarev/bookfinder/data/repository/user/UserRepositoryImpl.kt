@@ -8,12 +8,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ua.khai.slesarev.bookfinder.data.local.database.BookFinderDatabase
-import ua.khai.slesarev.bookfinder.data.local.database.dao.UserDao
-import ua.khai.slesarev.bookfinder.data.model.Person
-import ua.khai.slesarev.bookfinder.data.model.User
+import ua.khai.slesarev.bookfinder.data.local.database.dao.user.UserDao
+import ua.khai.slesarev.bookfinder.data.models.remote.profile.Person
+import ua.khai.slesarev.bookfinder.data.models.local.User
 import ua.khai.slesarev.bookfinder.data.remote.api.user_profile.GooglePeopleAPI
 import ua.khai.slesarev.bookfinder.data.remote.api.user_profile.RetrofitClientGP
-import ua.khai.slesarev.bookfinder.data.repository.authentication.appoauth.TokenStorage
 import ua.khai.slesarev.bookfinder.data.util.MY_TAG
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -21,7 +20,7 @@ import kotlin.coroutines.suspendCoroutine
 class UserRepositoryImpl(private val context: Context): UserRepository {
 
     private val userProfileAPI: GooglePeopleAPI = RetrofitClientGP.instance
-    private val localDatabase: BookFinderDatabase = BookFinderDatabase.getInstance(context)
+    private val localDatabase: BookFinderDatabase = BookFinderDatabase.getInstance()
     private val localDao: UserDao = localDatabase.userDao()
     override suspend fun addUser(user: User): Result<Unit> {
         return try {
