@@ -12,7 +12,6 @@ class BookFinderApp : Application() {
         super.onCreate()
         instance = this
         AuthStateManager.init(this)
-        Log.e(MY_TAG, "deleteDatabase(book-finder-db): ${deleteDatabase("book-finder-db")}")
         BookFinderDatabase.init(this)
     }
 

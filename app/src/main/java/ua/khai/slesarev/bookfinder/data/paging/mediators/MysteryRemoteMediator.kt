@@ -38,7 +38,7 @@ class MysteryRemoteMediator (
     ): MediatorResult {
         val page = when (loadType) {
             LoadType.REFRESH -> {
-                SelfDevelopmentRemoteMediator.resetCurrentPosition(context)
+                resetCurrentPosition(context)
                 0
             }
             LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
@@ -85,7 +85,7 @@ class MysteryRemoteMediator (
                                 MysteryBook(
                                     id = index++,
                                     title = it1,
-                                    authors = it2.toString(),
+                                    authors = it2.joinToString(", "),
                                     coverUrl = it3
                                 )
                             }
@@ -127,7 +127,7 @@ class MysteryRemoteMediator (
         }
 
         fun getCurrentPosition(context: Context): Int {
-            return getPreferences(context).getInt(KEY_CURRENT_POSITION, 1) // Default position is 1
+            return getPreferences(context).getInt(KEY_CURRENT_POSITION, 0)
         }
 
         fun setCurrentPosition(context: Context, position: Int) {
@@ -135,7 +135,7 @@ class MysteryRemoteMediator (
         }
 
         fun resetCurrentPosition(context: Context) {
-            setCurrentPosition(context, 1)
+            setCurrentPosition(context, 0)
         }
     }
 }

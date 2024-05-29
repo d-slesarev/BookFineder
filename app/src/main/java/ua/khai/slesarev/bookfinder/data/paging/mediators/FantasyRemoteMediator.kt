@@ -83,7 +83,7 @@ class FantasyRemoteMediator (
                                 FantasyBook(
                                     id = index++,
                                     title = it1,
-                                    authors = it2.toString(),
+                                    authors = it2.joinToString(", "),
                                     coverUrl = it3
                                 )
                             }
@@ -124,7 +124,7 @@ class FantasyRemoteMediator (
         }
 
         fun getCurrentPosition(context: Context): Int {
-            return getPreferences(context).getInt(KEY_CURRENT_POSITION, 1) // Default position is 1
+            return getPreferences(context).getInt(KEY_CURRENT_POSITION, 0) // Default position is 1
         }
 
         fun setCurrentPosition(context: Context, position: Int) {
@@ -132,7 +132,7 @@ class FantasyRemoteMediator (
         }
 
         fun resetCurrentPosition(context: Context) {
-            setCurrentPosition(context, 1)
+            setCurrentPosition(context, 0)
         }
     }
 }

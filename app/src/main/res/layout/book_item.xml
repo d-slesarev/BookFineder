@@ -48,30 +48,37 @@
                   если название заголовка книги слишком большое-->
 
             <TextView
-                    android:text=""
+                    android:text="Собрание преданий, пословиц, поговорок, загадок и скороговорок русского народа, собранных в разных частях России и помещённых в систему"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/bookTitle"
                     android:fontFamily="sans-serif"
-                    android:maxLength="25"
                     android:ellipsize="end"
+                    android:singleLine="true"
+                    android:scrollHorizontally="true"
                     android:textSize="13sp"
                     android:textStyle="bold|italic"
                     android:textAlignment="center"
                     android:paddingBottom="4dp"
-                    android:paddingTop="5dp" />
+                    android:paddingTop="5dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"/>
 
             <TextView
-                    android:text=""
+                    android:text="Anna Kharenyna"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/bookAuthor"
                     android:fontFamily="sans-serif"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:scrollHorizontally="true"
                     android:textSize="13sp"
                     android:textStyle="bold|italic"
                     android:textAlignment="center"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="4dp" />
+                    android:paddingBottom="16dp"
+                    android:paddingStart="34dp"
+                    android:paddingEnd="34dp"/>
         </LinearLayout>
 
         <com.facebook.shimmer.ShimmerFrameLayout
